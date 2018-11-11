@@ -1,5 +1,10 @@
-#.exe é uma extensão falsa utilizada no macro gcc para poder se ter uma indentificação no .gitignore e dentro da pasta do Sublime, e assim não repassar para frente arquivos binários
+# Some extensions to GCC binary outputs
+*.out
 *.exe
+*.app
+*.i*86
+*.x86_64
+*.hex
 
-#teste será qualquer arquivo utilizado pelos desenvolvedores
-*teste*
+# File used to track commit progress
+nextCommitLog.txt
