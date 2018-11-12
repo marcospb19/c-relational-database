@@ -1,0 +1,3 @@
+people
+|primary id| |string nome| |int idade| |char sexo| |string email| |bool isDead?|
+2|João Marcos|18|M|marcospb19@hotmail.com|true

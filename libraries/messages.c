@@ -4,7 +4,7 @@
 void welcomeMessage()
 {
 	colorBoldWhite();
-	printf("SGBD-ITP 0.0.2, ANSI-C");
+	printf("SGBD-ITP 0.1.0, ANSI-C");
 	colorReset();
 	printf("\nType \"");
 	colorBoldYellow();
@@ -25,7 +25,7 @@ void welcomeMessage()
 void creditsMessage()
 {
 	colorBoldWhite();
-	printf("SGBD 0.0.2-ITP");
+	printf("SGBD 0.1.0-ITP");
 	colorReset();
 	printf(" is a software made by ");
 	colorBoldWhite();

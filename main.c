@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdbool.h>
 #include "libraries/messages.h"
-#include "libraries/colors.h"
 #include "libraries/tables.h"
 
 
@@ -23,13 +22,20 @@ int main()
 		else if (strcmp(userInput , "credits") == 0)
 			creditsMessage();
 
-		// This function return 0 if create is at the start of the input
+		// This function return 0 if create is at the start of the input. It \
+		will be used later to create the table with the name in the same line
 		else if (strcommand(userInput , "create"))
 		{
 			printf("Type the name of the table\n");
 			scanf(" %s" , userInput);
 			createTable(userInput);
 		}
+
+
+		else if (strcmp(userInput , "line") == 0)
+			createLine();
+
+
 		else if (strcmp(userInput , "list") == 0)
 			listTables();
 
