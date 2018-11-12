@@ -181,3 +181,62 @@ int listTables()
 }
 
 
+int createLine()
+{
+	FILE* listOfTables = fopen("tables/listOfTables.txt" , "r+");
+	if (listOfTables == NULL)
+	{
+		printf("ERROR: Fail to open listOfTables.txt\n");
+		return -1;
+	}
+
+
+	printf("Type the name of the table you want to insert a line.\n");
+	// 50 is the maximium size of a table name
+	char* nameOfTable = malloc(sizeof(char) * 51);
+	char* tablesToCompare = malloc(sizeof(char) * 51);
+	scanf("%s", nameOfTable);
+
+	int numberOfTables;
+	fscanf(listOfTables , "%d\n" , &numberOfTables);
+
+	bool notFound = true;
+	// This for will check if the table exists
+	for (int i = 0 ; i < numberOfTables ; i++)
+	{
+		// Get the table in that line
+		fscanf(listOfTables , "%s\n" , tablesToCompare);
+
+		// Check if the table already exists
+		if (strcmp(tablesToCompare , nameOfTable) == 0)
+		{
+			char* directoryAuxiliar = malloc(sizeof(char) * 62);
+			strcpy(directoryAuxiliar , "tables/");
+			strcat(directoryAuxiliar , nameOfTable);
+			strcat(directoryAuxiliar , ".txt");
+
+			FILE* tableToChange = fopen(directoryAuxiliar , "r+");
+			free(directoryAuxiliar);
+
+			fseek(tableToChange , 0 , SEEK_END);
+
+			char*
+
+
+
+
+
+
+
+			notFound = false;
+			break;
+		}
+	}
+	if (notFound) // If table do not exists
+		return -2;
+
+	fclose(listOfTables);
+
+	free(tablesToCompare);
+	free(nameOfTable);
+}

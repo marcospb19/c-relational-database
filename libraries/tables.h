@@ -12,3 +12,6 @@ int createTable(char nameOfTable[]);
 
 int listTables();
 // List all the tables inside of listOfTables.txt
+
+int createLine();
+// Inserts a line
