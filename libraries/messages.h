@@ -1,6 +1,10 @@
+#ifndef MESSAGES_H
+#define MESSAGES_H
 #include "messages.c"
+#endif
 
 // messages.c contain functions to print messages in the terminal
+
 
 void welcomeMessage();
 // Print welcome message, with 'help', 'credits' and 'license' suggestions
@@ -18,4 +22,4 @@ void finishMessage();
 // Message printed when the user finished the application correctly
 
 void noInputMessage();
-//Prints if input is invalid
+//Prints message if input is invalid

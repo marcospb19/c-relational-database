@@ -4,7 +4,7 @@
 void welcomeMessage()
 {
 	colorBoldWhite();
-	printf("SGBD-ITP 0.0.1, ANSI-C");
+	printf("SGBD-ITP 0.0.2, ANSI-C");
 	colorReset();
 	printf("\nType \"");
 	colorBoldYellow();
@@ -25,19 +25,17 @@ void welcomeMessage()
 void creditsMessage()
 {
 	colorBoldWhite();
-	printf("SGBD 0.0.1-ITP");
+	printf("SGBD 0.0.2-ITP");
 	colorReset();
 	printf(" is a software made by ");
-	colorBoldGreen();
+	colorBoldWhite();
 	printf("João Marcos");
 	colorReset();
 	printf(" and ");
-	colorBoldGreen();
-
+	colorBoldWhite();
 	printf("Guilherme Lira");
 	colorReset();
 	printf("\nVisit ");
-
 	colorBoldCyan();
 	printf("www.github.com/marcospb19/projeto-itp");
 	colorReset();
@@ -92,5 +90,7 @@ void helpMessage()
 // Prints if input is invalid
 void noInputMessage()
 {
-	puts("Invalid input, please try again.\n");
+	colorBoldRed();
+	puts("Invalid input, please try again.");
+	colorReset();
 }

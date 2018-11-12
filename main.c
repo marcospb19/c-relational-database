@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "libraries/messages.h"
+#include "libraries/colors.h"
 
 int main()
 {
@@ -11,7 +12,9 @@ int main()
 	while (true)
 	{
 		printf("»»» ");
+		colorWhite();
 		scanf(" %s" , userInput);
+		colorReset();
 
 		if (strcmp("help" , userInput) == 0)
 			helpMessage();

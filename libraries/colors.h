@@ -1,6 +1,10 @@
+#ifndef COLORS_H
+#define COLORS_H
 #include "colors.c"
+#endif
 
 // colors.c has functions that change the output font color, and background color
+
 
 // Reset the font color and background, if changed
 void colorReset();
