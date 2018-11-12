@@ -3,6 +3,8 @@
 #include <stdbool.h>
 #include "libraries/messages.h"
 #include "libraries/colors.h"
+#include "libraries/tables.h"
+
 
 int main()
 {
@@ -12,23 +14,35 @@ int main()
 	while (true)
 	{
 		printf("»»» ");
-		colorWhite();
 		scanf(" %s" , userInput);
-		colorReset();
 
-		if (strcmp("help" , userInput) == 0)
+		if (strcmp(userInput , "help") == 0)
 			helpMessage();
-		else if (strcmp("license" , userInput) == 0)
+		else if (strcmp(userInput , "license") == 0)
 			licenseMessage();
-		else if (strcmp("credits" , userInput) == 0)
+		else if (strcmp(userInput , "credits") == 0)
 			creditsMessage();
 
+		// This function return 0 if create is at the start of the input
+		else if (strcommand(userInput , "create"))
+		{
+			printf("Type the name of the table\n");
+			scanf(" %s" , userInput);
+			createTable(userInput);
+		}
+		else if (strcmp(userInput , "list") == 0)
+			listTables();
+
 		// Quit
-		else if (strcmp("exit" , userInput) == 0 || userInput[0] == 'q')
+		else if (strcmp(userInput , "exit") == 0 ||
+		         userInput[0] == 'q')
 		{
 			finishMessage();
 			break;
 		}
+
+
+		// If no command is detected
 		else
 			noInputMessage();
 	}

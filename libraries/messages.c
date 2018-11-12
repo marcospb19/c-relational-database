@@ -53,7 +53,10 @@ void finishMessage()
 // Prints the License applied to all the repository
 void licenseMessage()
 {
-	printf("GNU General Public License 3.0, 29 June 2007\nThis License let\'s anyone use, modify and distribute, except to closed source versions.\nRead more on ");
+	colorBoldWhite();
+	printf("GNU General Public License 3.0");
+	colorReset();
+	printf(", 29 June 2007\nThis License let\'s anyone use, modify and distribute, except to closed source versions.\nRead more on ");
 	colorBoldCyan();
 	puts("www.gnu.org/licenses/quick-guide-gplv3.html\n");
 	colorReset();
@@ -66,24 +69,31 @@ void helpMessage()
 	puts("List of commands:");
 
 	colorBoldYellow();
-	printf("%13s: " , "credits");
+	printf("%13s: " , "create");
 	colorReset();
-	printf("Show the credits,\n");
-
-	colorBoldYellow();
-	printf("%13s: " , "license");
-	colorReset();
-	printf("Show the license,\n");
-
-	colorBoldYellow();
-	printf("%13s: " , "help");
-	colorReset();
-	printf("Show this message,\n");
+	puts("Create a table.");
 
 	colorBoldYellow();
 	printf("%13s: " , "q | exit");
 	colorReset();
-	puts("Exit the program.\n");
+	puts("Exit the program,");
+
+	colorBoldYellow();
+	printf("%13s: " , "help");
+	colorReset();
+	puts("Show this message,");
+
+	colorBoldYellow();
+	printf("%13s: " , "credits");
+	colorReset();
+	puts("Show the credits,");
+
+	colorBoldYellow();
+	printf("%13s: " , "license");
+	colorReset();
+	puts("Show the license.");
+
+	puts("");
 }
 
 
