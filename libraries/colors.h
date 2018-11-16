@@ -1,7 +1,5 @@
 #ifndef COLORS_H
 #define COLORS_H
-#include "colors.c"
-#endif
 
 // colors.c has functions that change the output font color, and background color
 
@@ -38,3 +36,5 @@ void colorBackgroundBlue();		// Blue Background
 void colorBackgroundPurple();	// Purple Background
 void colorBackgroundCyan();		// Cyan Background
 void colorBackgroundWhite();	// White Background
+
+#endif

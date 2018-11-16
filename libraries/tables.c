@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include "colors.h"
 
+typedef enum columnTypes columnTypes;
+typedef struct tableStruct tableStruct;
+
 
 // Similar to strcmp, but returns 1 if found the command inside of the string
 int strcommand(char string[] , char command[])
@@ -180,7 +183,7 @@ int listTables()
 	return 0;
 }
 
-
+// Not completed?
 int createLine()
 {
 	FILE* listOfTables = fopen("tables/listOfTables.txt" , "r+");
@@ -216,27 +219,95 @@ int createLine()
 			strcat(directoryAuxiliar , ".txt");
 
 			FILE* tableToChange = fopen(directoryAuxiliar , "r+");
+			if (tableToChange == NULL)
+				return -2
+
 			free(directoryAuxiliar);
 
 			fseek(tableToChange , 0 , SEEK_END);
 
-			char*
-
-
-
-
-
-
+			// char*
 
 			notFound = false;
 			break;
 		}
 	}
 	if (notFound) // If table do not exists
-		return -2;
+		return -3;
 
 	fclose(listOfTables);
 
 	free(tablesToCompare);
 	free(nameOfTable);
+	return 0;
 }
+
+
+// Returns a pointer to the tableStruct
+tableStruct* loadTableStruct(char nameOfTable[])
+{
+	if (!tableExists(nameOfTable))
+	{
+		printf("Fail to load, \"%s\" table do not exists.\n", nameOfTable);
+		return NULL;
+	}
+
+	char* directory = malloc(sizeof(char) * 65); // Maximium size it can get
+	strcpy(directory , "../tables/");
+	strcat(directory , nameOfTable);
+	strcat(directory , ".txt");
+	FILE* loadingTable = fopen(directory , "r");
+	free(directory);
+
+	// If fails to open or don't exists
+	if (loadingTable == NULL)
+	{
+		printf("Fail to load struct, can't open file\n");
+		return NULL;
+	}
+
+	tableStruct* returnStruct = malloc(sizeof(tableStruct));
+
+	// Now reads the file
+	// Read the first 3 lines:
+
+
+
+	fscanf(loadingTable, "%s\n%d\n%d\n" ,
+	returnStruct->nameOfTable , // Could use local argument
+	returnStruct->quantityOfLines ,
+	returnStruct->quantityOfColumns);
+
+	// Now that we read the 3 first lines, can read the column types and names
+
+
+	return returnStruct;
+}
+
+// Free all the data from a tableStruct
+int freeTableStruct(tableStruct* structure)
+{
+	// Above all the free(.) calls, are the content of the structure that is being freed
+
+	// char[*] primaryKeyName;
+	free(primaryKeyName);
+
+	for (int i = 0 ; i < structure->quantityOfColumns ; i++)
+	{
+		// columnTypes[*] types;
+		free(types[i]);
+		// char*[*] nameOfColumns;
+		free(nameOfColumns[i]);
+	}
+	// char[*]* nameOfColumns;
+	free(nameOfColumns);
+
+
+	// int quantityOfLines;
+	// int quantityOfColumns;
+	// char nameOfTable[51];
+	free(structure);
+
+	return 0;
+}
+
