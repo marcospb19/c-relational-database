@@ -6,5 +6,19 @@
 *.x86_64
 *.hex
 
+
+
+# Except for listOfTables
+!tables/listOfTables.txt
+# Tables created
+tables/*
+# Except for listOfTables
+!tables/listOfTables.txt
+
+
+# Any test
+test*
+
+
 # File used to track commit progress
 nextCommitLog.txt
