@@ -1,7 +1,5 @@
 #ifndef MESSAGES_H
 #define MESSAGES_H
-#include "messages.c"
-#endif
 
 // messages.c contain functions to print messages in the terminal
 
@@ -23,3 +21,5 @@ void finishMessage();
 
 void noInputMessage();
 //Prints message if input is invalid
+
+#endif

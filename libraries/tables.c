@@ -3,80 +3,46 @@
 #include <string.h>
 #include <stdbool.h>
 #include "colors.h"
+#include "list.h"
 
-typedef enum columnTypes columnTypes;
-typedef struct tableStruct tableStruct;
+typedef enum {int_ , float_ , string_ , char_} columnTypes ;
 
-
-// Similar to strcmp, but returns 1 if found the command inside of the string
-int strcommand(char string[] , char command[])
+typedef struct
 {
-	short stringSize = strlen(string);
-	short commandSize = strlen(command);
+	int quantityOfLines;
+	int quantityOfColumns; // Doens't include primaryKey
 
-	if (commandSize > stringSize)
-		return 0;
+	char nameOfTable[51]; // 50 is the maximium size
 
-	for (register short i = 0 ; i < commandSize ; i++)
-	{
-		if (command[i] != string[i])
-			return 0;
-	}
+	char* primaryKeyName; // Uses malloc
 
-	return 1;
-}
+	char** nameOfColumns; // Uses malloc
+
+	columnTypes* types; // Uses malloc
+} tableStruct ;
 
 
 int createTable(char nameOfTable[])
 {
-	FILE* listOfTables = fopen("tables/listOfTables.txt" , "r+");
-	if (listOfTables == NULL)
+	// If table to be created already exists::
+	if (tableExists(nameOfTable))
 	{
-		puts("ERROR: Fail to open listOfTable.txt.");
+		puts("ERROR: Table already exists.");
 		return -1;
 	}
 
-	// 50 is the maximium size of a table name
-	// format: /tables/(nameOfTable).txt
-	char* newTableFile = malloc(sizeof(char) * 62);
-	// newTableFile stores the string to create the newTable
-	strcpy(newTableFile , "tables/");
-	strcat(newTableFile , nameOfTable);
-	strcat(newTableFile , ".txt");
+	char* newTableDirectory = malloc(sizeof(char) * 62);
+	// newTableDirectory = /tables/(nameOfTable).txt
+	sprintf(newTableDirectory , "tables/%s.txt" , nameOfTable);
 
-	FILE* newTable = fopen(newTableFile , "wr");
-	free(newTableFile);
-
+	FILE* newTable = fopen(newTableDirectory , "wr+");
 	if (newTable == NULL)
 	{
 		puts("ERROR: Fail to open the new table.");
-		fclose(listOfTables);
 		return -2;
 	}
-
-	short numberOfTables;
-	// Get the numberOfTables and go to the second line
-	fscanf(listOfTables , "%hd\n" , &numberOfTables);
-
-	// 50 is the maximium size of a table name
-	char* tablesToCompare = malloc(sizeof(char) * 51);
-
-	// This for will check if the table already exists
-	for (register short i = 0 ; i < numberOfTables ; i++)
-	{
-		// Get the table in that line
-		fscanf(listOfTables , "%s\n" , tablesToCompare);
-
-		// Check if the table already exists
-		if (strcmp(tablesToCompare , nameOfTable) == 0)
-		{
-			fclose(listOfTables);
-			fclose(newTable);
-			puts("ERROR: Table already exists.");
-			return -3;
-		}
-	}
-	free(tablesToCompare);
+	printf("Directory: %s\n" , newTableDirectory);
+	free(newTableDirectory); // Free the directory string
 
 	// Writing the new table at the end of listOfTables
 	fprintf(listOfTables , "%s\n" , nameOfTable);
@@ -96,7 +62,7 @@ int createTable(char nameOfTable[])
 	fprintf(newTable , "|primary %s| " , tableColumnName);
 
 	puts("Now, fill the columns:");
-	short columnCount = 1;
+	int columnCount = 1;
 	while (true)
 	{
 		puts("Column options: int, string, char, float, bool. (0 to finish)");
@@ -155,7 +121,7 @@ int createTable(char nameOfTable[])
 	return 0;
 }
 
-
+//
 int listTables()
 {
 	// puts("All tables:");
@@ -165,12 +131,12 @@ int listTables()
 		printf("ERROR: Fail to open listOfTables.txt\n");
 		return -1;
 	}
-	register char* lines = malloc(sizeof(char) * 51);
+	char* lines = malloc(sizeof(char) * 51);
 
-	short number;
-	fscanf(listOfTables , "%hd" , &number);
+	int number;
+	fscanf(listOfTables , "%d" , &number);
 
-	for (register short i = 0 ; i < number ; i++)
+	for (int i = 0 ; i < number ; i++)
 	{
 		fscanf(listOfTables , "%s\n" , lines);
 		printf("\t%s\n", lines);
@@ -220,7 +186,7 @@ int createLine()
 
 			FILE* tableToChange = fopen(directoryAuxiliar , "r+");
 			if (tableToChange == NULL)
-				return -2
+				return -2;
 
 			free(directoryAuxiliar);
 
@@ -246,7 +212,7 @@ int createLine()
 // Returns a pointer to the tableStruct
 tableStruct* loadTableStruct(char nameOfTable[])
 {
-	if (!tableExists(nameOfTable))
+	if (!listOfTables_TableExists(nameOfTable))
 	{
 		printf("Fail to load, \"%s\" table do not exists.\n", nameOfTable);
 		return NULL;
@@ -272,11 +238,12 @@ tableStruct* loadTableStruct(char nameOfTable[])
 	// Read the first 3 lines:
 
 
-
 	fscanf(loadingTable, "%s\n%d\n%d\n" ,
 	returnStruct->nameOfTable , // Could use local argument
-	returnStruct->quantityOfLines ,
-	returnStruct->quantityOfColumns);
+	&returnStruct->quantityOfLines ,
+	&returnStruct->quantityOfColumns);
+
+	returnStruct->types = malloc(sizeof(columnTypes) * returnStruct->quantityOfColumns);
 
 	// Now that we read the 3 first lines, can read the column types and names
 
@@ -289,18 +256,19 @@ int freeTableStruct(tableStruct* structure)
 {
 	// Above all the free(.) calls, are the content of the structure that is being freed
 
+
 	// char[*] primaryKeyName;
-	free(primaryKeyName);
+	free(structure->primaryKeyName);
+	// columnTypes[*] types;
+	free(structure->types);
 
 	for (int i = 0 ; i < structure->quantityOfColumns ; i++)
 	{
-		// columnTypes[*] types;
-		free(types[i]);
 		// char*[*] nameOfColumns;
-		free(nameOfColumns[i]);
+		free(structure->nameOfColumns[i]);
 	}
 	// char[*]* nameOfColumns;
-	free(nameOfColumns);
+	free(structure->nameOfColumns);
 
 
 	// int quantityOfLines;

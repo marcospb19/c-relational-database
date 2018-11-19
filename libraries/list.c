@@ -3,9 +3,10 @@
 #include <string.h>
 #include <stdbool.h>
 
+// Directory to acess with the main on the root:
 char listOfTables_Directory[] = "tables/listOfTables.txt";
 
-short listOfTables_Number()
+int listOfTables_Number() // Return the number of tables in listOfTables.txt
 {
 	FILE* listOfTables = fopen(listOfTables_Directory , "r");
 	if (listOfTables == NULL)
@@ -14,53 +15,52 @@ short listOfTables_Number()
 		return -1;
 	}
 
-
-	short numTables;
-	fscanf(listOfTables , "%hd" , &numTables);
+	int numTables;
+	fscanf(listOfTables , "%d" , &numTables);
 	fclose(listOfTables);
 	return numTables;
 }
 
 
-// Changes the number of tables inside of listOfTables.txt
-bool listOfTables_ChangeNumber(int change)
+// Changes the number of tables inside of listOfTables.txt, returns 1 if sucess
+int listOfTables_ChangeNumber(int change)
 {
 	FILE* listOfTables = fopen(listOfTables_Directory , "r+");
 	if (listOfTables == NULL)
 	{
 		printf("Error at listOfTables_ChangeNumber");
-		return false;
+		return 0;
 	}
 
-	short numTables;
-	fscanf(listOfTables , "%hd" , &numTables);
+	int numTables;
+	fscanf(listOfTables , "%d" , &numTables);
 
 	// If the new value is negative
 	if (numTables + change < 0)
 	{
 		printf("Error at listOfTables_ChangeNumber");
-		return false;
+		return 0;
 	}
 
 	rewind(listOfTables);
 	fprintf(listOfTables, "%05hd", numTables + change);
 	fclose(listOfTables);
 
-	return true;
+	return 1;
 }
 
-// Returns true if the table exists, false if it doesn't
-bool listOfTables_TableExists(char nameOfTable[])
+// Returns 1 if the table exists, 0 if it doesn't
+int listOfTables_TableExists(char nameOfTable[])
 {
 	FILE* listOfTables = fopen(listOfTables_Directory , "r");
 	if (listOfTables == NULL)
 	{
 		printf("Error at listOfTables_TableExists");
-		return false;
+		return 0;
 	}
 
-	short numTables;
-	fscanf(listOfTables , "%hd\n" , &numTables);
+	int numTables;
+	fscanf(listOfTables , "%d\n" , &numTables);
 	char* tableToCompare = malloc(sizeof(char) * 51);
 
 	// Check each table
@@ -70,18 +70,18 @@ bool listOfTables_TableExists(char nameOfTable[])
 		if (strcmp(tableToCompare , nameOfTable) == 0)
 		{
 			free(tableToCompare);
-			return true;
+			return 1;
 		}
 	}
 	fclose(listOfTables);
 	free(tableToCompare);
 
-	return false;
+	return 0;
 }
 
 
 // Adds a table to the end of listOfTables.txt
-short listOfTables_AddTable(char nameOfTable[])
+int listOfTables_AddTable(char nameOfTable[])
 {
 	FILE* listOfTables = fopen(listOfTables_Directory , "a");
 	if (listOfTables == NULL)
@@ -95,40 +95,42 @@ short listOfTables_AddTable(char nameOfTable[])
 	return 0;
 }
 
-// Remove a table from of listOfTables.txt
-short listOfTables_RemoveTable(char nameOfTable[])
-{
-	FILE* listOfTables = fopen(listOfTables_Directory , "r+");
-	if (listOfTables == NULL)
-	{
-		printf("Error at listOfTables_RemoveTable");
-		return -1;
-	}
+// // DONT WORK
+// // Remove a table from of listOfTables.txt
+// int listOfTables_RemoveTable(char nameOfTable[])
+// {
+// 	FILE* listOfTables = fopen(listOfTables_Directory , "r+");
+// 	if (listOfTables == NULL)
+// 	{
+// 		printf("Error at listOfTables_RemoveTable");
+// 		return -1;
+// 	}
 
-	// If the table don't exists
-	if (!listOfTables_TableExists(nameOfTable))
-	{
-		printf("Table don't exists\n");
-		return -2;
-	}
+// 	// If the table don't exists
 
-	short numTables;
-	fscanf(listOfTables , "%hd\n" , &numTables);
-	char* tableToCompare = malloc(sizeof(char) * 51);
+// 	if (listOfTables_TableExists(nameOfTable))
+// 	{
+// 		printf("Table don't exists\n");
+// 		return -2;
+// 	}
 
-	// Check each table
-	for (int i = 0 ; i < numTables ; i++)
-	{
-		fscanf(listOfTables , "%s\n" , tableToCompare);
-		if (strcmp(tableToCompare , nameOfTable) == 0)
-		{
-			free(tableToCompare);
-			return 1;
-		}
-	}
+// 	int numTables;
+// 	fscanf(listOfTables , "%d\n" , &numTables);
+// 	char* tableToCompare = malloc(sizeof(char) * 51);
+
+// 	// Check each table
+// 	for (int i = 0 ; i < numTables ; i++)
+// 	{
+// 		fscanf(listOfTables , "%s\n" , tableToCompare);
+// 		if (strcmp(tableToCompare , nameOfTable) == 0)
+// 		{
+// 			free(tableToCompare);
+// 			return 1;
+// 		}
+// 	}
 
 
-	free(tableToCompare);
-	return 0;
-}
+// 	free(tableToCompare);
+// 	return 0;
+// }
 

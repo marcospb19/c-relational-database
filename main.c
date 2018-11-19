@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "libraries/messages.h"
 #include "libraries/list.h"
 #include "libraries/tables.h"
+#include "libraries/commands.h"
+#include "libraries/messages.h"
 
 
 int main()
@@ -26,26 +27,23 @@ int main()
 
 		if (strcmp(userInput , "help") == 0)
 			helpMessage();
+		else if (strcmp(userInput , "list") == 0)
+			listTables();
+		else if (strcmp(userInput , "line") == 0)
+			createLine(); // createLine don't works yet
 		else if (strcmp(userInput , "license") == 0)
 			licenseMessage();
 		else if (strcmp(userInput , "credits") == 0)
 			creditsMessage();
 
-		// This function return 0 if create is at the start of the input. It will be used later to create the table with the name in the same line
+		// strcommand return 0 if "create" is at the start of the input.
 		else if (strcommand(userInput , "create"))
 		{
-			printf("Type the name of the table\n");
+			printf("Type the name of the table\n»»» ");
 			scanf(" %s" , userInput);
 			createTable(userInput);
 		}
 
-
-		else if (strcmp(userInput , "line") == 0)
-			createLine();
-
-
-		else if (strcmp(userInput , "list") == 0)
-			listTables();
 
 		// Quit
 		else if (strcmp(userInput , "exit") == 0 ||
