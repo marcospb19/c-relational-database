@@ -3,8 +3,35 @@
 #include <string.h>
 #include <stdbool.h>
 
-// Directory to acess with the main on the root:
 char listOfTables_Directory[] = "tables/listOfTables.txt";
+
+int listTables()
+{
+	// puts("All tables:");
+	FILE* listOfTables = fopen(listOfTables_Directory , "r+");
+	if (listOfTables == NULL)
+	{
+		printf("ERROR: Fail to open listOfTables.txt\n");
+		return -1;
+	}
+	char* lines = malloc(sizeof(char) * 51);
+
+	int number;
+	fscanf(listOfTables , "%d" , &number);
+
+	for (int i = 0 ; i < number ; i++)
+	{
+		fscanf(listOfTables , "%s\n" , lines);
+		printf("\t%s\n", lines);
+	}
+	puts("");
+
+	free(lines);
+	fclose(listOfTables);
+
+	return 0;
+}
+
 
 int listOfTables_Number() // Return the number of tables in listOfTables.txt
 {

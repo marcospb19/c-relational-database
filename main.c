@@ -29,6 +29,35 @@ int main()
 			helpMessage();
 		else if (strcmp(userInput , "list") == 0)
 			listTables();
+
+		else if (strcmp(userInput , "column") == 0)
+		{
+			puts("All tables available:\n");
+			listTables();
+			printf("Type the name of the table to create a column\n»»» ");
+			scanf(" %s" , userInput);
+			createColumn(userInput);
+		}
+		else if (strcmp(userInput , "column") == 0)
+		{
+			puts("All tables available:\n");
+			listTables();
+			printf("Type the name of the table to create a column\n»»» ");
+			scanf(" %s" , userInput);
+			listValues(userInput);
+		}
+
+		else if (strcmp(userInput , "listvalues") == 0)
+		{
+			puts("All tables available:\n");
+			listTables();
+			printf("Type the name of the table to list all values\n»»» ");
+			scanf(" %s" , userInput);
+			listValues(userInput);
+		}
+
+
+
 		else if (strcmp(userInput , "line") == 0)
 			createLine(); // createLine don't works yet
 		else if (strcmp(userInput , "license") == 0)
@@ -47,7 +76,7 @@ int main()
 
 		// Quit
 		else if (strcmp(userInput , "exit") == 0 ||
-				 userInput[0] == 'q')
+		         userInput[0] == 'q')
 		{
 			finishMessage();
 			break;

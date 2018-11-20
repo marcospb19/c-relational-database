@@ -25,7 +25,7 @@ typedef struct
 int createTable(char nameOfTable[])
 {
 	// If table to be created already exists::
-	if (tableExists(nameOfTable))
+	if (listOfTables_TableExists(nameOfTable))
 	{
 		puts("ERROR: Table already exists.");
 		return -1;
@@ -41,15 +41,22 @@ int createTable(char nameOfTable[])
 		puts("ERROR: Fail to open the new table.");
 		return -2;
 	}
+	FILE* listOfTables = fopen("../listOfTables.txt" , "r");
+	if (listOfTables == NULL)
+	{
+		fclose(newTable);
+		puts("ERROR: Fail to open list of tables.");
+		return -10;
+	}
 	printf("Directory: %s\n" , newTableDirectory);
 	free(newTableDirectory); // Free the directory string
 
 	// Writing the new table at the end of listOfTables
-	fprintf(listOfTables , "%s\n" , nameOfTable);
+	fprintf(newTable , "%s\n" , nameOfTable);
 
 	// Increase the numberOfTables by 1
 	fseek(listOfTables , 0 , SEEK_SET);
-	fprintf(listOfTables , "%05d" ,  numberOfTables + 1);
+	// fprintf(listOfTables , "%05d" ,  numberOfTables + 1);
 	fclose(listOfTables);
 
 	fprintf(newTable , "%s\n" , nameOfTable);
@@ -83,10 +90,10 @@ int createTable(char nameOfTable[])
 
 		// If it isn't a valid type, take input again
 		if (strcmp(tableColumnType , "int"	 ) &&
-		    strcmp(tableColumnType , "string") &&
-		    strcmp(tableColumnType , "char"	 ) &&
-		    strcmp(tableColumnType , "float" ) &&
-		    strcmp(tableColumnType , "bool"	 ) )
+			strcmp(tableColumnType , "string") &&
+			strcmp(tableColumnType , "char"	 ) &&
+			strcmp(tableColumnType , "float" ) &&
+			strcmp(tableColumnType , "bool"	 ) )
 		{
 			printf("Invalid type, try again\n");
 			goto columnTypeInput;
@@ -121,33 +128,6 @@ int createTable(char nameOfTable[])
 	return 0;
 }
 
-//
-int listTables()
-{
-	// puts("All tables:");
-	FILE* listOfTables = fopen("tables/listOfTables.txt" , "r+");
-	if (listOfTables == NULL)
-	{
-		printf("ERROR: Fail to open listOfTables.txt\n");
-		return -1;
-	}
-	char* lines = malloc(sizeof(char) * 51);
-
-	int number;
-	fscanf(listOfTables , "%d" , &number);
-
-	for (int i = 0 ; i < number ; i++)
-	{
-		fscanf(listOfTables , "%s\n" , lines);
-		printf("\t%s\n", lines);
-	}
-	puts("");
-
-	free(lines);
-	fclose(listOfTables);
-
-	return 0;
-}
 
 // Not completed?
 int createLine()
@@ -219,9 +199,8 @@ tableStruct* loadTableStruct(char nameOfTable[])
 	}
 
 	char* directory = malloc(sizeof(char) * 65); // Maximium size it can get
-	strcpy(directory , "../tables/");
-	strcat(directory , nameOfTable);
-	strcat(directory , ".txt");
+	sprintf(directory , "tables/%s.txt" , nameOfTable);
+	printf("%s!!!\n", directory);
 	FILE* loadingTable = fopen(directory , "r");
 	free(directory);
 
@@ -246,16 +225,13 @@ tableStruct* loadTableStruct(char nameOfTable[])
 	returnStruct->types = malloc(sizeof(columnTypes) * returnStruct->quantityOfColumns);
 
 	// Now that we read the 3 first lines, can read the column types and names
-
-
 	return returnStruct;
 }
 
 // Free all the data from a tableStruct
 int freeTableStruct(tableStruct* structure)
 {
-	// Above all the free(.) calls, are the content of the structure that is being freed
-
+	// Above all the free() calls, are the content of the structure that is being freed
 
 	// char[*] primaryKeyName;
 	free(structure->primaryKeyName);
@@ -279,3 +255,164 @@ int freeTableStruct(tableStruct* structure)
 	return 0;
 }
 
+
+int createColumn(char nameOfTable[])
+{
+
+	// listTables();
+	if (!listOfTables_TableExists(nameOfTable))
+	{
+		printf("Table don't exists.\n");
+		return -1;
+	}
+
+	tableStruct* table = loadTableStruct(nameOfTable);
+	if (table == NULL)
+	{
+		printf("Error loading struct\n");
+		return -2;
+	}
+
+	char* tableToEditDirectory = malloc(sizeof(char) * 62);
+	sprintf(tableToEditDirectory , "tables/%s.txt" , nameOfTable);
+	FILE* tableToEdit = fopen(tableToEditDirectory , "r");
+
+	if (tableToEdit == NULL)
+	{
+		printf("Error opening table\n");
+		return -3;
+	}
+
+	FILE* swapFile = fopen("tables/swap.swp" , "wr+");
+	if (swapFile == NULL)
+	{
+		printf("Error opening tableToEdit table\n");
+		fclose(tableToEdit);
+		return -4;
+	}
+
+	char* tableColumnType = malloc(sizeof(char) * 51);
+
+	columnTypeInput1:
+	printf("Especify the type of the column:\n");
+	scanf(" %s", tableColumnType);
+
+	// If it isn't a valid type, take input again
+	if (strcmp(tableColumnType , "int"	 ) &&
+		strcmp(tableColumnType , "string") &&
+		strcmp(tableColumnType , "char"	 ) &&
+		strcmp(tableColumnType , "float" ) &&
+		strcmp(tableColumnType , "bool"	 ) )
+	{
+		printf("Invalid type, try again\n");
+		goto columnTypeInput1;
+	}
+
+	char aux[2048];
+
+	// Skips 3 lines on the reading file
+	for (int i = 0 ; i < 3 ; i++)
+		fscanf(tableToEdit , "%*[^\n]\n");
+
+	// Reads the columns that already exists
+	fscanf(tableToEdit , "%[^\n]\n" , aux);
+
+	// aux = primary id|int idade|string nomes|char sexo|
+	// Now check if the column already exists
+
+	// char columnsToCompare[64];
+
+
+
+
+
+	char* tableColumnName = malloc(sizeof(char) * 51);
+	printf("Especify the name of the column:\n");
+	scanf(" %s", tableColumnName);
+
+
+
+	// Starts filling the swapFile
+	fprintf(swapFile , "%s\n%05d\n%05d\n" , table->nameOfTable , table->quantityOfLines , table->quantityOfColumns + 1);
+
+
+	// Write all the existing columns in 'aux' and the new one from input
+	fprintf(swapFile, "%s%s %s|\n", aux , tableColumnType , tableColumnName);
+
+	for (int i = 0 ; i < table->quantityOfLines ; i++)
+	{
+		// Reads the line, and appends the empty new column
+		fscanf(tableToEdit , "%[^\n]\n" , aux);
+		fprintf(swapFile, "%s(nil)|\n", aux);
+	}
+
+	fclose(tableToEdit);
+	fclose(swapFile);
+
+	FILE* copy = fopen("tables/swap.swp" , "r");
+	FILE* paste = fopen(tableToEditDirectory , "wr+");
+	// Done reading, now replace all
+
+	// 4 is the minimium number of lines inside a table
+	for (int i = 0 ; i < 4 + table->quantityOfLines ; i++)
+	{
+		fscanf(copy , "%[^\n]\n" , aux);
+		fprintf(paste , "%s\n" , aux);
+	}
+
+
+	fclose(copy);
+	// Cleans the file
+	copy = fopen("tables/swap.swp" , "w");
+	fclose(copy);
+
+	fclose(paste);
+
+	free(tableToEditDirectory);
+	return 0;
+}
+
+
+int listValues(char nameOfTable[])
+{
+	if (!listOfTables_TableExists(nameOfTable))
+	{
+		printf("Table don't exists.\n");
+		return -1;
+	}
+
+	char* tableToEditDirectory = malloc(sizeof(char) * 62);
+	sprintf(tableToEditDirectory , "tables/%s.txt" , nameOfTable);
+	FILE* tableFile = fopen(tableToEditDirectory , "r+");
+	free(tableToEditDirectory);
+	if (tableFile == NULL)
+	{
+		printf("Error opening tableFile\n");
+		return -2;
+	}
+
+	// Skips 4 lines on the reading file
+	for (int i = 0 ; i < 4 ; i++)
+		fscanf(tableFile , "%*[^\n]\n");
+
+	tableStruct* table = loadTableStruct(nameOfTable);
+
+	char aux[1024];
+
+	for (int i = 0 ; i < table->quantityOfLines ; i++)
+	{
+		fscanf(tableFile , "%[^|]|" , aux);
+		printf("\n%s", aux);
+
+		for (int j = 0 ; j < table->quantityOfColumns ; j++)
+		{
+			fscanf(tableFile , "%[^|]|" , aux);
+			printf("  |  %s", aux);
+		}
+		fscanf(tableFile , "\n");
+	}
+	puts("\n");
+	fclose(tableFile);
+	free(table);
+	return 0;
+}

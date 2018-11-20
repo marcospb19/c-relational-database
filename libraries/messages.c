@@ -68,10 +68,25 @@ void helpMessage()
 	colorBoldWhite();
 	puts("List of commands:");
 
-	colorBoldYellow();
-	printf("%13s: " , "create");
+	colorBoldRed();
+	printf("%13s: " , "create,");
 	colorReset();
-	puts("Create a table.");
+	puts("Create a table,");
+
+	colorBoldYellow();
+	printf("%13s: " , "column");
+	colorReset();
+	puts("Create a column in a table,");
+
+	colorBoldYellow();
+	printf("%13s: " , "list");
+	colorReset();
+	puts("List all tables,");
+
+	colorBoldYellow();
+	printf("%13s: " , "listvalues");
+	colorReset();
+	puts("List all values in a table,");
 
 	colorBoldYellow();
 	printf("%13s: " , "q | exit");
