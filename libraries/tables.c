@@ -5,7 +5,7 @@
 #include "colors.h"
 #include "list.h"
 
-typedef enum {int_ , float_ , string_ , char_} columnTypes ;
+typedef enum {int_ , float_ , string_ , char_ , bool_} columnTypes ;
 
 typedef struct
 {
@@ -276,9 +276,37 @@ tableStruct* loadTableStruct(char nameOfTable[])
 	fscanf(loadingTable , "primary %[^|]|" , loadingStruct->primaryKeyName);
 
 	loadingStruct->columnNames = malloc(sizeof(char*) * loadingStruct->quantityOfColumns);
+	// Verifies is error happens, and fills everything to use the free function
+	bool typeError = false;
 
+	char* typeAux = malloc(sizeof(char) * 10);
 	for (int i = 0; i < loadingStruct->quantityOfColumns; i++)
 	{
+		position = ftell(loadingTable);
+		fscanf(loadingTable , "%*s");
+		loadingStruct->primaryKeyName = malloc(sizeof(char) * ftell(loadingTable) - position);
+		fseek(loadingTable , position , SEEK_SET);
+		fscanf(loadingTable , "%s" , typeAux);
+		
+		if (typeError)
+			loadingStruct->types[i] = 0;
+		else if strcmp(typeAux , "int"	) 
+			loadingStruct->types[i] = int_;
+		else if strcmp(typeAux , "string")
+			loadingStruct->types[i] = string_;
+		else if strcmp(typeAux , "char"	 )
+			loadingStruct->types[i] = char_;
+		else if strcmp(typeAux , "float" )
+			loadingStruct->types[i] = float_;
+		else if strcmp(typeAux , "bool"	 )
+			loadingStruct->types[i] = bool_;
+		else
+		{ 
+			typeError = true;
+			printf("Error loading this table\n");
+			return NULL;
+		}
+
 		position = ftell(loadingTable);
 		fscanf(loadingTable , "%*s");
 
@@ -286,14 +314,9 @@ tableStruct* loadTableStruct(char nameOfTable[])
 		fseek(loadingTable , position , SEEK_SET);
 		fscanf(loadingTable , "%s" , loadingStruct->columnNames[i]); TA ERRADO TEM QUE SER COLUMNTYPES COM TYPEDEF
 
-		position = ftell(loadingTable);
-		fscanf(loadingTable , " %*[^|]|");
-		loadingStruct->primaryKeyName = malloc(sizeof(char) * ftell(loadingTable) - position - 2);
-		fseek(loadingTable , position , SEEK_SET);
-		fscanf(loadingTable , " %[^|]|" , loadingStruct->columnNames[i]);
 
 	}
-	
+	free(typeAux);	
 
 	// Now that we read the 3 first lines, can read the column types and names
 	return loadingStruct;
