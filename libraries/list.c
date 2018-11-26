@@ -69,7 +69,7 @@ int listOfTables_ChangeNumber(int change)
 		return 0;
 	}
 
-	rewind(listOfTables);
+	fseek(listOfTables , 0 , SEEK_SET);
 	fprintf(listOfTables, "%05hd", numTables + change);
 	fclose(listOfTables);
 
@@ -79,31 +79,19 @@ int listOfTables_ChangeNumber(int change)
 // Returns 1 if the table exists, 0 if it doesn't
 int listOfTables_TableExists(char nameOfTable[])
 {
-	FILE* listOfTables = fopen(listOfTables_Directory , "r");
-	if (listOfTables == NULL)
+	char* tableDirectory = malloc(sizeof(char) * 62);
+	strcpy(tableDirectory , "tables/");
+	strcat(tableDirectory , nameOfTable);
+	strcat(tableDirectory , ".txt");
+
+	FILE* table = fopen(tableDirectory , "r");
+	free(aux);
+	if (table == NULL)
 	{
-		printf("Error at listOfTables_TableExists");
-		return 0;
+		return 0; // Table don't exists
 	}
-
-	int numTables;
-	fscanf(listOfTables , "%d\n" , &numTables);
-	char* tableToCompare = malloc(sizeof(char) * 51);
-
-	// Check each table
-	for (int i = 0 ; i < numTables ; i++)
-	{
-		fscanf(listOfTables , "%s\n" , tableToCompare);
-		if (strcmp(tableToCompare , nameOfTable) == 0)
-		{
-			free(tableToCompare);
-			return 1;
-		}
-	}
-	fclose(listOfTables);
-	free(tableToCompare);
-
-	return 0;
+	fclose(table);
+	return 1;
 }
 
 

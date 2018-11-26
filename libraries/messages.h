@@ -3,7 +3,6 @@
 
 // messages.c contain functions to print messages in the terminal
 
-
 void welcomeMessage();
 // Print welcome message, with 'help', 'credits' and 'license' suggestions
 

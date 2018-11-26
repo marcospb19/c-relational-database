@@ -286,7 +286,7 @@ int createColumn(char nameOfTable[])
 	FILE* swapFile = fopen("tables/swap.swp" , "wr+");
 	if (swapFile == NULL)
 	{
-		printf("Error opening tableToEdit table\n");
+		printf("Error opening swapFile table\n");
 		fclose(tableToEdit);
 		return -4;
 	}
