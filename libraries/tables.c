@@ -16,10 +16,55 @@ typedef struct
 
 	char* primaryKeyName; // Uses malloc
 
-	char** nameOfColumns; // Uses malloc
+	char** columnNames; // Uses malloc
 
 	columnTypes* types; // Uses malloc
 } tableStruct ;
+
+
+int searchData(char nameOfTable[])
+{
+	if (!listOfTables_TableExists(nameOfTable))
+	{
+		printf("ERROR: table do not exists.\n");
+		return -1;
+	};
+
+	char* directoryAuxiliar = malloc(sizeof(char) * 62);
+	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
+	
+	tableStruct* structure = loadTableStruct(nameOfTable);
+	if (structure == NULL)
+	{
+		printf("Error loading the structure\n");
+		return -2;
+	}
+	
+	FILE* table = fopen(directoryAuxiliar , "r");
+	if (table == NULL)
+	{
+		freeTableStruct(structure);
+		printf("ERROR: could not open %s\n" , directoryAuxiliar);
+		return -3;
+	}
+
+	printf("Opened %s\n" , directoryAuxiliar);
+	free(directoryAuxiliar);
+
+	while (1)
+	{
+		printf("Type the name of the column to search (l to list columns)\n");
+		
+		for (int i = 0 ; i < structure.quantityOfColumns ; ++i)
+		{
+
+		}
+	}
+
+
+	return 0;
+}
+
 
 
 int createTable(char nameOfTable[])
@@ -200,32 +245,58 @@ tableStruct* loadTableStruct(char nameOfTable[])
 
 	char* directory = malloc(sizeof(char) * 65); // Maximium size it can get
 	sprintf(directory , "tables/%s.txt" , nameOfTable);
-	printf("%s!!!\n", directory);
 	FILE* loadingTable = fopen(directory , "r");
 	free(directory);
 
 	// If fails to open or don't exists
 	if (loadingTable == NULL)
 	{
-		printf("Fail to load struct, can't open file\n");
+		printf("Fail to load tableStruct\n");
 		return NULL;
 	}
 
-	tableStruct* returnStruct = malloc(sizeof(tableStruct));
+	tableStruct* loadingStruct = malloc(sizeof(tableStruct));
 
 	// Now reads the file
 	// Read the first 3 lines:
 
-
 	fscanf(loadingTable, "%s\n%d\n%d\n" ,
-	returnStruct->nameOfTable , // Could use local argument
-	&returnStruct->quantityOfLines ,
-	&returnStruct->quantityOfColumns);
+	loadingStruct->nameOfTable , // Could use local argument
+	&loadingStruct->quantityOfLines ,
+	&loadingStruct->quantityOfColumns);
 
-	returnStruct->types = malloc(sizeof(columnTypes) * returnStruct->quantityOfColumns);
+	// Falta preencher ainda
+	loadingStruct->types = malloc(sizeof(columnTypes) * loadingStruct->quantityOfColumns);
+
+	int position = ftell(loadingTable);
+	fscanf(loadingTable , "primary %*s|");
+	
+	loadingStruct->primaryKeyName = malloc(sizeof(char) * ftell(loadingTable) - position - 9);
+	fseek(loadingTable , position , SEEK_SET);
+	fscanf(loadingTable , "primary %[^|]|" , loadingStruct->primaryKeyName);
+
+	loadingStruct->columnNames = malloc(sizeof(char*) * loadingStruct->quantityOfColumns);
+
+	for (int i = 0; i < loadingStruct->quantityOfColumns; i++)
+	{
+		position = ftell(loadingTable);
+		fscanf(loadingTable , "%*s");
+
+		loadingStruct->columnNames[i] = malloc(sizeof(char) * ftell(loadingTable) - position);
+		fseek(loadingTable , position , SEEK_SET);
+		fscanf(loadingTable , "%s" , loadingStruct->columnNames[i]); TA ERRADO TEM QUE SER COLUMNTYPES COM TYPEDEF
+
+		position = ftell(loadingTable);
+		fscanf(loadingTable , " %*[^|]|");
+		loadingStruct->primaryKeyName = malloc(sizeof(char) * ftell(loadingTable) - position - 2);
+		fseek(loadingTable , position , SEEK_SET);
+		fscanf(loadingTable , " %[^|]|" , loadingStruct->columnNames[i]);
+
+	}
+	
 
 	// Now that we read the 3 first lines, can read the column types and names
-	return returnStruct;
+	return loadingStruct;
 }
 
 // Free all the data from a tableStruct
@@ -240,11 +311,11 @@ int freeTableStruct(tableStruct* structure)
 
 	for (int i = 0 ; i < structure->quantityOfColumns ; i++)
 	{
-		// char*[*] nameOfColumns;
-		free(structure->nameOfColumns[i]);
+		// char*[*] columnNames;
+		free(structure->columnNames[i]);
 	}
-	// char[*]* nameOfColumns;
-	free(structure->nameOfColumns);
+	// char[*]* columnNames;
+	free(structure->columnNames);
 
 
 	// int quantityOfLines;

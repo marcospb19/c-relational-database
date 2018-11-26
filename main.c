@@ -73,6 +73,13 @@ int main()
 			createTable(userInput);
 		}
 
+		else if (strcommand(userInput , "search"))
+		{
+			printf("Type the name of the table\n»»» ");
+			scanf(" %s" , userInput);
+			searchData(userInput);
+		}
+
 
 		// Quit
 		else if (strcmp(userInput , "exit") == 0 ||

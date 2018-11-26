@@ -85,7 +85,7 @@ int listOfTables_TableExists(char nameOfTable[])
 	strcat(tableDirectory , ".txt");
 
 	FILE* table = fopen(tableDirectory , "r");
-	free(aux);
+	free(tableDirectory);
 	if (table == NULL)
 	{
 		return 0; // Table don't exists

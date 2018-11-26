@@ -5,6 +5,8 @@
 typedef enum columnTypes columnTypes;
 typedef struct tableStruct tableStruct;
 
+int searchData(char nameOfTable[]);
+// Search for data inside of a choosen table
 
 int createTable(char nameOfTable[]);
 // Creates tables that can store integers, decimal numbers, characters and strings
