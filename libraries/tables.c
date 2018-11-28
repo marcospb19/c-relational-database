@@ -4,27 +4,29 @@
 #include <stdbool.h>
 #include "colors.h"
 #include "list.h"
+#include "struct.h"
 
-typedef enum {int_ , float_ , string_ , char_ , bool_} columnTypes ;
 
-typedef struct
+// Returns 1 if the table exists, 0 if it doesn't
+int tableExists(char nameOfTable[])
 {
-	int quantityOfLines;
-	int quantityOfColumns; // Doens't include primaryKey
+	char* tableDirectory = malloc(sizeof(char) * 62);
+	sprintf(tableDirectory , "tables/%s.txt" , nameOfTable);
 
-	char nameOfTable[51]; // 50 is the maximium size
-
-	char* primaryKeyName; // Uses malloc
-
-	char** columnNames; // Uses malloc
-
-	columnTypes* types; // Uses malloc
-} tableStruct ;
+	FILE* table = fopen(tableDirectory , "r");
+	free(tableDirectory);
+	if (table == NULL)
+	{
+		return 0; // Table don't exists
+	}
+	fclose(table);
+	return 1;
+}
 
 
 int searchData(char nameOfTable[])
 {
-	if (!listOfTables_TableExists(nameOfTable))
+	if (!tableExists(nameOfTable))
 	{
 		printf("ERROR: table do not exists.\n");
 		return -1;
@@ -33,17 +35,17 @@ int searchData(char nameOfTable[])
 	char* directoryAuxiliar = malloc(sizeof(char) * 62);
 	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
 	
-	tableStruct* structure = loadTableStruct(nameOfTable);
-	if (structure == NULL)
+	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
+	if (tableStruct == NULL)
 	{
-		printf("Error loading the structure\n");
+		printf("Error loading the tableStruct\n");
 		return -2;
 	}
 	
 	FILE* table = fopen(directoryAuxiliar , "r");
 	if (table == NULL)
 	{
-		freeTableStruct(structure);
+		freeTableStruct(tableStruct);
 		printf("ERROR: could not open %s\n" , directoryAuxiliar);
 		return -3;
 	}
@@ -51,16 +53,221 @@ int searchData(char nameOfTable[])
 	printf("Opened %s\n" , directoryAuxiliar);
 	free(directoryAuxiliar);
 
-	while (1)
+	printf("CHOOSE A COLUMN TO SEARCH:\n");
+	for (int i = 0; i < tableStruct->quantityOfColumns; ++i)
 	{
-		printf("Type the name of the column to search (l to list columns)\n");
-		
-		for (int i = 0 ; i < structure.quantityOfColumns ; ++i)
-		{
+		printf("[ %d ]   %s\n", i , tableStruct->columnNames[i]);
+	}
 
+	int searchingValueInt;
+	float searchingValueFloat;
+
+	int valueInt;
+	float valueFloat;
+	char searchInput[52];
+
+	int option;
+	bool aditionalOption = false;
+
+	int numberOfColumnToSearch;
+	scanf(" %d" , &numberOfColumnToSearch);
+
+	if (tableStruct->types[numberOfColumnToSearch] == int_ ||
+		tableStruct->types[numberOfColumnToSearch] == float_)
+	{
+		aditionalOption = true;
+		if (tableStruct->types[numberOfColumnToSearch] == int_)
+			printf("Column is int, choose an option\n");
+		else 
+			printf("Column is float, choose an option\n");
+
+		printf("[ 0 ] valores maior que o valor informado\n");
+		printf("[ 1 ] valores maior ou igual que o valor informado\n");
+		printf("[ 2 ] valores igual o valor informado\n");
+		printf("[ 3 ] valores menor que o valor informado\n");
+		printf("[ 4 ] valores menor ou igual que o valor informado\n");
+		printf("»»» ");
+		scanf(" %d" , &option);
+
+		if (tableStruct->types[numberOfColumnToSearch] == int_)
+		{
+			printf("Type the int value you wanna search: \n");
+			scanf(" %d" , &valueInt);
+		}
+		else 
+		{
+			printf("Type the float value you wanna search: \n");
+			scanf(" %f" , &valueFloat);
+		}	
+
+	}
+	else
+	{
+		printf("Now enter the value you want to search\n");
+		scanf(" %s" , searchInput);
+	}
+
+	// Skips 4 lines on table file
+	fscanf(table , "%*s\n%*d\n%*d\n%*[^\n]\n");
+
+	int positionToStartOfLine , primaryKeyFound;
+	bool found;
+	bool foundONE = false;
+	char aux[200];
+	for (int i = 0; i < tableStruct->quantityOfLines; ++i)
+	{
+		found = false;
+		positionToStartOfLine = ftell(table);
+		// Skips 1 time
+		fscanf(table , "%*[^|]|");
+		// Skipps to the desired column
+		
+		for (int j = 0; j < numberOfColumnToSearch ; ++j)
+		{
+			fscanf(table , "%*[^|]|");
+		}
+		
+		if (aditionalOption == true)
+		{
+			if (tableStruct->types[numberOfColumnToSearch] == int_)
+			{
+				fscanf(table , " %d|" , &searchingValueInt);
+			}
+			else 
+			{
+				fscanf(table , " %f|" , &searchingValueFloat);
+			}
+
+			// printf("[ 0 ] valores maiores que o valor informado\n");
+			// printf("[ 1 ] valores maiores ou igual que o valor informado\n");
+			// printf("[ 2 ] valores iguais o valor informado\n");
+			// printf("[ 3 ] valores menores que o valor informado\n");
+			// printf("[ 4 ] valores menores ou igual que o valor informado\n");
+
+			if (option == 0)
+			{
+				if (tableStruct->types[numberOfColumnToSearch] == int_)
+				{
+					if (searchingValueInt > valueInt)
+						found = true;
+				}
+				else
+				{
+					if (searchingValueFloat > valueFloat)
+						found = true;
+				}
+			}
+			if (option == 1)
+			{
+				if (tableStruct->types[numberOfColumnToSearch] == int_)
+				{
+					if (searchingValueInt >= valueInt)
+						found = true;
+				}
+				else
+				{
+					if (searchingValueFloat >= valueFloat)
+						found = true;
+				}
+			}
+			if (option == 2)
+			{
+				if (tableStruct->types[numberOfColumnToSearch] == int_)
+				{
+					if (searchingValueInt == valueInt)
+						found = true;
+				}
+				else
+				{
+					if (searchingValueFloat == valueFloat)
+						found = true;
+				}
+			}
+			if (option == 3)
+			{
+				if (tableStruct->types[numberOfColumnToSearch] == int_)
+				{
+					if (searchingValueInt <= valueInt)
+						found = true;
+				}
+				else
+				{
+					if (searchingValueFloat <= valueFloat)
+						found = true;
+				}
+			}
+			if (option == 4)
+			{
+				if (tableStruct->types[numberOfColumnToSearch] == int_)
+				{
+					if (searchingValueInt < valueInt)
+						found = true;
+				}
+				else
+				{
+					if (searchingValueFloat < valueFloat)
+						found = true;
+				}
+			}
+
+
+			if (found == true)
+			{
+				if (foundONE == false)
+				{
+					foundONE = true;
+					if (tableStruct->types[numberOfColumnToSearch] == int_)
+						printf("Found \"%d\"!!!\n" , valueInt);
+					else
+						printf("Found \"%f\"!!!\n" , valueFloat);
+				}
+
+
+				// Get the primary key
+				fseek(table , positionToStartOfLine , SEEK_SET);
+				fscanf(table , "%d|" , &primaryKeyFound);
+
+				// Go again to the end
+				fseek(table , positionToStartOfLine , SEEK_SET);
+				fscanf(table , "%[^\n]\n" , aux);
+
+
+				printf("Found at line %d, primarykey: %d\n" , i , primaryKeyFound);
+				printf("\t\tLine: %s\n" , aux);
+			}
+
+		}
+		else
+		{
+			fscanf(table , "%[^|]|" , aux);
+		}
+
+		// If the value is found
+		// Search process for int and float
+		// Search for other types
+		if (strcmp(aux , searchInput) == 0)
+		{
+			foundONE = true;
+
+			// Get the primary key
+			fseek(table , positionToStartOfLine , SEEK_SET);
+			fscanf(table , "%d|" , &primaryKeyFound);
+
+			// Go again to the end
+			fseek(table , positionToStartOfLine , SEEK_SET);
+			fscanf(table , "%[^\n]\n" , aux);
+
+
+			printf("Found at line %d, primarykey: %d\n" , i , primaryKeyFound);
+			printf("\t\tLine: %s\n" , aux);
 		}
 	}
 
+
+	if (!foundONE)
+		printf("Value not found\n");
+
+	freeTableStruct(tableStruct);
 
 	return 0;
 }
@@ -70,16 +277,14 @@ int searchData(char nameOfTable[])
 int createTable(char nameOfTable[])
 {
 	// If table to be created already exists::
-	if (listOfTables_TableExists(nameOfTable))
+	if (tableExists(nameOfTable))
 	{
 		puts("ERROR: Table already exists.");
 		return -1;
 	}
 
 	char* newTableDirectory = malloc(sizeof(char) * 62);
-	// newTableDirectory = /tables/(nameOfTable).txt
 	sprintf(newTableDirectory , "tables/%s.txt" , nameOfTable);
-
 	FILE* newTable = fopen(newTableDirectory , "wr+");
 	if (newTable == NULL)
 	{
@@ -97,12 +302,18 @@ int createTable(char nameOfTable[])
 	free(newTableDirectory); // Free the directory string
 
 	// Writing the new table at the end of listOfTables
-	fprintf(newTable , "%s\n" , nameOfTable);
+	if (listOfTables_ChangeNumber(1) != 0)
+	{
+		/* code */
+	} 
 
-	// Increase the numberOfTables by 1
-	fseek(listOfTables , 0 , SEEK_SET);
-	// fprintf(listOfTables , "%05d" ,  numberOfTables + 1);
-	fclose(listOfTables);
+
+	int listOfTables_AddTable(nameOfTable)
+
+	// // Increase the numberOfTables by 1
+	// fseek(listOfTables , 0 , SEEK_SET);
+	// // fprintf(listOfTables , "%05d" ,  numberOfTables + 1);
+	// fclose(listOfTables);
 
 	fprintf(newTable , "%s\n" , nameOfTable);
 
@@ -234,118 +445,83 @@ int createLine()
 }
 
 
-// Returns a pointer to the tableStruct
-tableStruct* loadTableStruct(char nameOfTable[])
+
+int listValues(char nameOfTable[])
 {
-	if (!listOfTables_TableExists(nameOfTable))
+	if (!tableExists(nameOfTable))
 	{
-		printf("Fail to load, \"%s\" table do not exists.\n", nameOfTable);
-		return NULL;
+		printf("Table don't exists.\n");
+		return -1;
 	}
 
-	char* directory = malloc(sizeof(char) * 65); // Maximium size it can get
-	sprintf(directory , "tables/%s.txt" , nameOfTable);
-	FILE* loadingTable = fopen(directory , "r");
-	free(directory);
+	char* tableToEditDirectory = malloc(sizeof(char) * 62);
+	sprintf(tableToEditDirectory , "tables/%s.txt" , nameOfTable);
+	FILE* tableFile = fopen(tableToEditDirectory , "r+");
+	free(tableToEditDirectory);
 
-	// If fails to open or don't exists
-	if (loadingTable == NULL)
+	if (tableFile == NULL)
 	{
-		printf("Fail to load tableStruct\n");
-		return NULL;
+		printf("Error opening tableFile\n");
+		return -2;
 	}
 
-	tableStruct* loadingStruct = malloc(sizeof(tableStruct));
+	// Skips 4 lines on the reading file
+	for (int i = 0 ; i < 4 ; i++)
+		fscanf(tableFile , "%*[^\n]\n");
 
-	// Now reads the file
-	// Read the first 3 lines:
+	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
 
-	fscanf(loadingTable, "%s\n%d\n%d\n" ,
-	loadingStruct->nameOfTable , // Could use local argument
-	&loadingStruct->quantityOfLines ,
-	&loadingStruct->quantityOfColumns);
+	char aux[1024];
 
-	// Falta preencher ainda
-	loadingStruct->types = malloc(sizeof(columnTypes) * loadingStruct->quantityOfColumns);
-
-	int position = ftell(loadingTable);
-	fscanf(loadingTable , "primary %*s|");
-	
-	loadingStruct->primaryKeyName = malloc(sizeof(char) * ftell(loadingTable) - position - 9);
-	fseek(loadingTable , position , SEEK_SET);
-	fscanf(loadingTable , "primary %[^|]|" , loadingStruct->primaryKeyName);
-
-	loadingStruct->columnNames = malloc(sizeof(char*) * loadingStruct->quantityOfColumns);
-	// Verifies is error happens, and fills everything to use the free function
-	bool typeError = false;
-
-	char* typeAux = malloc(sizeof(char) * 10);
-	for (int i = 0; i < loadingStruct->quantityOfColumns; i++)
+	for (int i = 0 ; i < tableStruct->quantityOfLines ; i++)
 	{
-		position = ftell(loadingTable);
-		fscanf(loadingTable , "%*s");
-		loadingStruct->primaryKeyName = malloc(sizeof(char) * ftell(loadingTable) - position);
-		fseek(loadingTable , position , SEEK_SET);
-		fscanf(loadingTable , "%s" , typeAux);
-		
-		if (typeError)
-			loadingStruct->types[i] = 0;
-		else if strcmp(typeAux , "int"	) 
-			loadingStruct->types[i] = int_;
-		else if strcmp(typeAux , "string")
-			loadingStruct->types[i] = string_;
-		else if strcmp(typeAux , "char"	 )
-			loadingStruct->types[i] = char_;
-		else if strcmp(typeAux , "float" )
-			loadingStruct->types[i] = float_;
-		else if strcmp(typeAux , "bool"	 )
-			loadingStruct->types[i] = bool_;
-		else
-		{ 
-			typeError = true;
-			printf("Error loading this table\n");
-			return NULL;
+		fscanf(tableFile , "%[^|]|" , aux);
+		printf("\n%s", aux);
+
+		for (int j = 0 ; j < tableStruct->quantityOfColumns ; j++)
+		{
+			fscanf(tableFile , "%[^|]|" , aux);
+			printf("  |  %s", aux);
 		}
-
-		position = ftell(loadingTable);
-		fscanf(loadingTable , "%*s");
-
-		loadingStruct->columnNames[i] = malloc(sizeof(char) * ftell(loadingTable) - position);
-		fseek(loadingTable , position , SEEK_SET);
-		fscanf(loadingTable , "%s" , loadingStruct->columnNames[i]); TA ERRADO TEM QUE SER COLUMNTYPES COM TYPEDEF
-
-
+		fscanf(tableFile , "\n");
 	}
-	free(typeAux);	
-
-	// Now that we read the 3 first lines, can read the column types and names
-	return loadingStruct;
+	puts("\n");
+	fclose(tableFile);
+	free(tableStruct);
+	return 0;
 }
 
-// Free all the data from a tableStruct
-int freeTableStruct(tableStruct* structure)
+// Reads source, replace on destination and clears source
+int copyAndPaste(char source[] , char destination[] , int numberOfLines)
 {
-	// Above all the free() calls, are the content of the structure that is being freed
+	FILE* copy = fopen(source , "r");
+	FILE* paste = fopen(destination , "wr+");
 
-	// char[*] primaryKeyName;
-	free(structure->primaryKeyName);
-	// columnTypes[*] types;
-	free(structure->types);
-
-	for (int i = 0 ; i < structure->quantityOfColumns ; i++)
+	if (copy == NULL || paste == NULL)
 	{
-		// char*[*] columnNames;
-		free(structure->columnNames[i]);
+		printf("Error trying to copy file into another\n");
+		if (copy == NULL)
+			fclose(copy);
+		if (paste == NULL)
+			fclose(paste);
+		return -1;
 	}
-	// char[*]* columnNames;
-	free(structure->columnNames);
 
+	char* aux = malloc(sizeof(char) * 10240);
 
-	// int quantityOfLines;
-	// int quantityOfColumns;
-	// char nameOfTable[51];
-	free(structure);
-
+	// Copying all lines from copy file to paste file
+	for (int i = 0 ; i < numberOfLines ; i++)
+	{
+		fscanf(copy , "%[^\n]\n" , aux);
+		fprintf(paste , "%s\n" , aux);
+	}
+	fclose(paste);
+	free(aux);
+	
+	fclose(copy);
+	// Cleans the source file
+	copy = fopen("tables/swap.swp" , "w");
+	fclose(copy);
 	return 0;
 }
 
@@ -354,14 +530,14 @@ int createColumn(char nameOfTable[])
 {
 
 	// listTables();
-	if (!listOfTables_TableExists(nameOfTable))
+	if (!tableExists(nameOfTable))
 	{
 		printf("Table don't exists.\n");
 		return -1;
 	}
 
-	tableStruct* table = loadTableStruct(nameOfTable);
-	if (table == NULL)
+	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
+	if (tableStruct == NULL)
 	{
 		printf("Error loading struct\n");
 		return -2;
@@ -373,7 +549,7 @@ int createColumn(char nameOfTable[])
 
 	if (tableToEdit == NULL)
 	{
-		printf("Error opening table\n");
+		printf("Error opening tableStruct\n");
 		return -3;
 	}
 
@@ -416,24 +592,18 @@ int createColumn(char nameOfTable[])
 
 	// char columnsToCompare[64];
 
-
-
-
-
 	char* tableColumnName = malloc(sizeof(char) * 51);
 	printf("Especify the name of the column:\n");
 	scanf(" %s", tableColumnName);
 
-
-
 	// Starts filling the swapFile
-	fprintf(swapFile , "%s\n%05d\n%05d\n" , table->nameOfTable , table->quantityOfLines , table->quantityOfColumns + 1);
+	fprintf(swapFile , "%s\n%05d\n%05d\n" , tableStruct->nameOfTable , tableStruct->quantityOfLines , tableStruct->quantityOfColumns + 1);
 
 
 	// Write all the existing columns in 'aux' and the new one from input
 	fprintf(swapFile, "%s%s %s|\n", aux , tableColumnType , tableColumnName);
 
-	for (int i = 0 ; i < table->quantityOfLines ; i++)
+	for (int i = 0 ; i < tableStruct->quantityOfLines ; i++)
 	{
 		// Reads the line, and appends the empty new column
 		fscanf(tableToEdit , "%[^\n]\n" , aux);
@@ -443,70 +613,11 @@ int createColumn(char nameOfTable[])
 	fclose(tableToEdit);
 	fclose(swapFile);
 
-	FILE* copy = fopen("tables/swap.swp" , "r");
-	FILE* paste = fopen(tableToEditDirectory , "wr+");
-	// Done reading, now replace all
+	copyAndPaste("tables/swap.swp" , tableToEditDirectory , 4 + tableStruct->quantityOfLines);
 
-	// 4 is the minimium number of lines inside a table
-	for (int i = 0 ; i < 4 + table->quantityOfLines ; i++)
-	{
-		fscanf(copy , "%[^\n]\n" , aux);
-		fprintf(paste , "%s\n" , aux);
-	}
-
-
-	fclose(copy);
-	// Cleans the file
-	copy = fopen("tables/swap.swp" , "w");
-	fclose(copy);
-
-	fclose(paste);
-
+	freeTableStruct(tableStruct);
 	free(tableToEditDirectory);
 	return 0;
 }
 
 
-int listValues(char nameOfTable[])
-{
-	if (!listOfTables_TableExists(nameOfTable))
-	{
-		printf("Table don't exists.\n");
-		return -1;
-	}
-
-	char* tableToEditDirectory = malloc(sizeof(char) * 62);
-	sprintf(tableToEditDirectory , "tables/%s.txt" , nameOfTable);
-	FILE* tableFile = fopen(tableToEditDirectory , "r+");
-	free(tableToEditDirectory);
-	if (tableFile == NULL)
-	{
-		printf("Error opening tableFile\n");
-		return -2;
-	}
-
-	// Skips 4 lines on the reading file
-	for (int i = 0 ; i < 4 ; i++)
-		fscanf(tableFile , "%*[^\n]\n");
-
-	tableStruct* table = loadTableStruct(nameOfTable);
-
-	char aux[1024];
-
-	for (int i = 0 ; i < table->quantityOfLines ; i++)
-	{
-		fscanf(tableFile , "%[^|]|" , aux);
-		printf("\n%s", aux);
-
-		for (int j = 0 ; j < table->quantityOfColumns ; j++)
-		{
-			fscanf(tableFile , "%[^|]|" , aux);
-			printf("  |  %s", aux);
-		}
-		fscanf(tableFile , "\n");
-	}
-	puts("\n");
-	fclose(tableFile);
-	free(table);
-	return 0;
-}

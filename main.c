@@ -7,6 +7,7 @@
 #include "libraries/messages.h"
 
 
+
 int main()
 {
 	welcomeMessage();
@@ -47,7 +48,7 @@ int main()
 			listValues(userInput);
 		}
 
-		else if (strcmp(userInput , "listvalues") == 0)
+		else if (strcmp(userInput , "printall") == 0)
 		{
 			puts("All tables available:\n");
 			listTables();
@@ -75,11 +76,12 @@ int main()
 
 		else if (strcommand(userInput , "search"))
 		{
+			printf("All tables:\n");
+			listTables();
 			printf("Type the name of the table\n»»» ");
 			scanf(" %s" , userInput);
 			searchData(userInput);
 		}
-
 
 		// Quit
 		else if (strcmp(userInput , "exit") == 0 ||
@@ -89,9 +91,10 @@ int main()
 			break;
 		}
 
-
 		// If no command is detected
 		else
 			noInputMessage();
+
+		puts("");
 	}
 }

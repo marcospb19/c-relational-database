@@ -4,7 +4,7 @@
 void welcomeMessage()
 {
 	colorBoldWhite();
-	printf("SGBD-ITP 0.1.0, ANSI-C");
+	printf("SGBD-ITP 0.2.2, ANSI-C");
 	colorReset();
 	printf("\nType \"");
 	colorBoldYellow();
@@ -25,7 +25,7 @@ void welcomeMessage()
 void creditsMessage()
 {
 	colorBoldWhite();
-	printf("SGBD 0.1.0-ITP");
+	printf("SGBD 0.2.2-ITP");
 	colorReset();
 	printf(" is a software made by ");
 	colorBoldWhite();
@@ -56,10 +56,11 @@ void licenseMessage()
 	colorBoldWhite();
 	printf("GNU General Public License 3.0");
 	colorReset();
-	printf(", 29 June 2007\nThis License let\'s anyone use, modify and distribute, except to closed source versions.\nRead more on ");
+	printf("\nRead more on ");
 	colorBoldCyan();
-	puts("www.gnu.org/licenses/quick-guide-gplv3.html\n");
+	printf("www.gnu.org/licenses/quick-guide-gplv3.html");
 	colorReset();
+	puts(".");
 }
 
 // Prints all the available commands
@@ -84,14 +85,9 @@ void helpMessage()
 	puts("List all tables,");
 
 	colorBoldYellow();
-	printf("%13s: " , "listvalues");
+	printf("%13s: " , "printall");
 	colorReset();
 	puts("List all values in a table,");
-
-	colorBoldYellow();
-	printf("%13s: " , "q | exit");
-	colorReset();
-	puts("Exit the program,");
 
 	colorBoldYellow();
 	printf("%13s: " , "help");
@@ -106,9 +102,12 @@ void helpMessage()
 	colorBoldYellow();
 	printf("%13s: " , "license");
 	colorReset();
-	puts("Show the license.");
+	puts("Show the license,");
 
-	puts("");
+	colorBoldYellow();
+	printf("%13s: " , "q | exit");
+	colorReset();
+	puts("Exit the program.");
 }
 
 

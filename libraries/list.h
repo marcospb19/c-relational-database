@@ -15,9 +15,6 @@ int listOfTables_TableListNumber(int change);
 int listOfTables_NumberOfTables();
 // Return the number of tables inside of listOfTables.txt
 
-int listOfTables_TableExists(char nameOfTable[]);
-// Returns 1 if the table exists, 0 if it doesn't
-
 int listOfTables_AddTable(char nameOfTable[]);
 // Add a table to the bottom of listOfTables.txt
 

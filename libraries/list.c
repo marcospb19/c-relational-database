@@ -76,24 +76,6 @@ int listOfTables_ChangeNumber(int change)
 	return 1;
 }
 
-// Returns 1 if the table exists, 0 if it doesn't
-int listOfTables_TableExists(char nameOfTable[])
-{
-	char* tableDirectory = malloc(sizeof(char) * 62);
-	strcpy(tableDirectory , "tables/");
-	strcat(tableDirectory , nameOfTable);
-	strcat(tableDirectory , ".txt");
-
-	FILE* table = fopen(tableDirectory , "r");
-	free(tableDirectory);
-	if (table == NULL)
-	{
-		return 0; // Table don't exists
-	}
-	fclose(table);
-	return 1;
-}
-
 
 // Adds a table to the end of listOfTables.txt
 int listOfTables_AddTable(char nameOfTable[])
@@ -123,7 +105,7 @@ int listOfTables_AddTable(char nameOfTable[])
 
 // 	// If the table don't exists
 
-// 	if (listOfTables_TableExists(nameOfTable))
+// 	if (tableExists(nameOfTable))
 // 	{
 // 		printf("Table don't exists\n");
 // 		return -2;
