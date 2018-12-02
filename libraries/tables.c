@@ -632,3 +632,53 @@ int removeTable(char nameOfTable[])
 
 	return 0;
 }
+
+
+// Returns 1 if the id already exists, 0 if doesn't or any error occurs
+int idExists(char nameOfTable[] , int primaryKey)
+{
+	if (!tableExists(nameOfTable))
+	{
+		printf("Error: this table don't exists\n");
+		return 0;
+	}
+
+	char* tableDirectory = malloc(sizeof(char) * 62);
+	sprintf(tableDirectory , "tables/%s.txt" , nameOfTable);
+
+	FILE* table = fopen(tableDirectory , "r");
+	free(tableDirectory);
+	if (table == NULL) // Pretty much a redundant error checking
+	{
+		printf("Error trying to open this table here\n");
+		return 0;
+	}
+
+	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
+
+	if (tableStruct == NULL)
+	{
+		printf("Error trying to load struct here\n");
+		fclose(table);
+		return 0;
+	}
+	// Skips the four first lines
+	fscanf(table , "%*[^\n]\n%*d\n%*d\n%*[^\n]\n");
+	// Maybe wanna go back after, edit, and to grab the name of the primary key column
+
+	int primaryKeyCompare;
+	for (int i = 0 ; i < tableStruct->quantityOfLines ; i++)
+	{
+		// primaryKeyCompare is the key at the start of each line
+		fscanf(table , "%d|" , &primaryKeyCompare);
+		if (primaryKey == primaryKeyCompare)
+		{
+			return 1;
+		}
+		fscanf(table , "%*[^\n]\n");
+
+	}
+
+	freeTableStruct(tableStruct);
+	return 0;
+}

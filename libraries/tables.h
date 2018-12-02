@@ -28,5 +28,7 @@ int tableExists(char nameOfTable[]);
 int removeTable(char nameOfTable[]);
 // Delete a table with the following format tables/nameOfTable.txt
 
+int idExists(char nameOfTable[] , int primaryKey);
+// Returns 1 if the id already exists, 0 if doesn't or any error occurs
 
 #endif
