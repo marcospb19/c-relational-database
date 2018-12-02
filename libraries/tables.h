@@ -25,5 +25,8 @@ int listValues(char nameOfTable[]);
 int tableExists(char nameOfTable[]);
 // Try to open table to check if table exists
 
+int removeTable(char nameOfTable[]);
+// Delete a table with the following format tables/nameOfTable.txt
+
 
 #endif

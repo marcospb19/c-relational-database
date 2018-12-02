@@ -1,24 +1,13 @@
-# Some extensions to GCC binary outputs
-*.out
-*.exe
-*.app
-*.i*86
-*.x86_64
-*.hex
+# Don't upload the binary executable, the user needs to compile the program using make.sh or cmake
+sgbd
 
-
-
-# Except for listOfTables
-!tables/listOfTables.txt
 # Tables created
 tables/*
 # Except for listOfTables
 !tables/listOfTables.txt
 
-
 # Any test
 test*
 
-
 # File used to track commit progress
-nextCommitLog.txt
+commitLog.txt

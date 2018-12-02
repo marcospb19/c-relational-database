@@ -7,21 +7,21 @@ void colorReset(){
 
 // High intensity colored
 void colorBlack(){
-	printf("\033[90m");}
+	printf("\033[0;90m");}
 void colorRed(){
-	printf("\033[91m");}
+	printf("\033[0;91m");}
 void colorGreen(){
-	printf("\033[92m");}
+	printf("\033[0;92m");}
 void colorYellow(){
-	printf("\033[93m");}
+	printf("\033[0;93m");}
 void colorBlue(){
-	printf("\033[94m");}
+	printf("\033[0;94m");}
 void colorPurple(){
-	printf("\033[95m");}
+	printf("\033[0;95m");}
 void colorCyan(){
-	printf("\033[96m");}
+	printf("\033[0;96m");}
 void colorWhite(){
-	printf("\033[97m");}
+	printf("\033[0;97m");}
 
 
 // Bold, and high intensity colored

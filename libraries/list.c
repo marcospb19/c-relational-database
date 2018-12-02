@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "tables.h"
+#include "colors.h"
 
 char listOfTables_Directory[] = "tables/listOfTables.txt";
 
 int listTables()
 {
-	// puts("All tables:");
 	FILE* listOfTables = fopen(listOfTables_Directory , "r+");
 	if (listOfTables == NULL)
 	{
@@ -16,15 +17,18 @@ int listTables()
 	}
 	char* lines = malloc(sizeof(char) * 51);
 
+	// Gets the number of tables to read and jump a line
 	int number;
-	fscanf(listOfTables , "%d" , &number);
+	fscanf(listOfTables , "%d\n" , &number);
 
+	colorBoldWhite();
+	puts(" All tables available:\n");
+	colorReset();
 	for (int i = 0 ; i < number ; i++)
 	{
-		fscanf(listOfTables , "%s\n" , lines);
-		printf("\t%s\n", lines);
+		fscanf(listOfTables , "%[^\n]\n" , lines);
+		printf("   %s\n", lines);
 	}
-	puts("");
 
 	free(lines);
 	fclose(listOfTables);
@@ -65,7 +69,7 @@ int listOfTables_ChangeNumber(int change)
 	// If the new value is negative
 	if (numTables + change < 0)
 	{
-		printf("Error at listOfTables_ChangeNumber");
+		printf("Error at listOfTables_ChangeNumber, negative number");
 		return 0;
 	}
 
@@ -92,42 +96,49 @@ int listOfTables_AddTable(char nameOfTable[])
 	return 0;
 }
 
-// // DONT WORK
-// // Remove a table from of listOfTables.txt
-// int listOfTables_RemoveTable(char nameOfTable[])
-// {
-// 	FILE* listOfTables = fopen(listOfTables_Directory , "r+");
-// 	if (listOfTables == NULL)
-// 	{
-// 		printf("Error at listOfTables_RemoveTable");
-// 		return -1;
-// 	}
-
-// 	// If the table don't exists
-
-// 	if (tableExists(nameOfTable))
-// 	{
-// 		printf("Table don't exists\n");
-// 		return -2;
-// 	}
-
-// 	int numTables;
-// 	fscanf(listOfTables , "%d\n" , &numTables);
-// 	char* tableToCompare = malloc(sizeof(char) * 51);
-
-// 	// Check each table
-// 	for (int i = 0 ; i < numTables ; i++)
-// 	{
-// 		fscanf(listOfTables , "%s\n" , tableToCompare);
-// 		if (strcmp(tableToCompare , nameOfTable) == 0)
-// 		{
-// 			free(tableToCompare);
-// 			return 1;
-// 		}
-// 	}
 
 
-// 	free(tableToCompare);
-// 	return 0;
-// }
+// Remove a table from listOfTables.txt
+int listOfTables_RemoveTable(char nameOfTable[])
+{
+	FILE* listOfTables = fopen(listOfTables_Directory , "r");
+	if (listOfTables == NULL)
+	{
+		printf("Error at listOfTables_RemoveTable\n");
+		return -1;
+	}
+	FILE* NewList = fopen("listOfTables.swp" , "wr+");
+	if (NewList == NULL)
+	{
+		fclose(listOfTables);
+		printf("Error: trying to open newList\n");
+		return -2;
+	}
+
+	// Gets the number of tables and writes at the top of the new table
+	int numberOfTables = listOfTables_Number();
+	fprintf(NewList , "%05d\n" , numberOfTables);
+
+	// Skips 1 line on listOfTables
+	fscanf(listOfTables , "%*[^\n]\n");
+
+	char* aux = malloc(sizeof(char) * 51);
+	int i;
+	for (i = 0 ; i < numberOfTables ; i++)
+	{
+		fscanf(listOfTables , "%[^\n]\n" , aux);
+		if (strcmp(nameOfTable , aux) != 0)
+			fprintf(NewList , "%s\n" , aux);
+	}
+	free(aux);
+
+	fclose(listOfTables);
+	fclose(NewList);
+
+	copyAndPaste("listOfTables.swp" , listOfTables_Directory , numberOfTables);
+
+	// Decreases 1 from the total
+	listOfTables_ChangeNumber(-1);
+	return 0;
+}
 

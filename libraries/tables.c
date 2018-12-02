@@ -30,18 +30,18 @@ int searchData(char nameOfTable[])
 	{
 		printf("ERROR: table do not exists.\n");
 		return -1;
-	};
+	}
 
 	char* directoryAuxiliar = malloc(sizeof(char) * 62);
 	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
-	
+
 	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
 	if (tableStruct == NULL)
 	{
 		printf("Error loading the tableStruct\n");
 		return -2;
 	}
-	
+
 	FILE* table = fopen(directoryAuxiliar , "r");
 	if (table == NULL)
 	{
@@ -78,7 +78,7 @@ int searchData(char nameOfTable[])
 		aditionalOption = true;
 		if (tableStruct->types[numberOfColumnToSearch] == int_)
 			printf("Column is int, choose an option\n");
-		else 
+		else
 			printf("Column is float, choose an option\n");
 
 		printf("[ 0 ] valores maior que o valor informado\n");
@@ -94,11 +94,11 @@ int searchData(char nameOfTable[])
 			printf("Type the int value you wanna search: \n");
 			scanf(" %d" , &valueInt);
 		}
-		else 
+		else
 		{
 			printf("Type the float value you wanna search: \n");
 			scanf(" %f" , &valueFloat);
-		}	
+		}
 
 	}
 	else
@@ -118,22 +118,22 @@ int searchData(char nameOfTable[])
 	{
 		found = false;
 		positionToStartOfLine = ftell(table);
-		// Skips 1 time
+		// Skips 1 column (primary key column)
 		fscanf(table , "%*[^|]|");
 		// Skipps to the desired column
-		
+
 		for (int j = 0; j < numberOfColumnToSearch ; ++j)
 		{
 			fscanf(table , "%*[^|]|");
 		}
-		
+
 		if (aditionalOption == true)
 		{
 			if (tableStruct->types[numberOfColumnToSearch] == int_)
 			{
 				fscanf(table , " %d|" , &searchingValueInt);
 			}
-			else 
+			else
 			{
 				fscanf(table , " %f|" , &searchingValueFloat);
 			}
@@ -291,40 +291,24 @@ int createTable(char nameOfTable[])
 		puts("ERROR: Fail to open the new table.");
 		return -2;
 	}
-	FILE* listOfTables = fopen("../listOfTables.txt" , "r");
-	if (listOfTables == NULL)
-	{
-		fclose(newTable);
-		puts("ERROR: Fail to open list of tables.");
-		return -10;
-	}
-	printf("Directory: %s\n" , newTableDirectory);
+	colorBoldYellow();
+	printf("Table created at: %s\n" , newTableDirectory);
+	colorReset();
 	free(newTableDirectory); // Free the directory string
 
-	// Writing the new table at the end of listOfTables
-	if (listOfTables_ChangeNumber(1) != 0)
-	{
-		/* code */
-	} 
-
-
-	int listOfTables_AddTable(nameOfTable)
-
-	// // Increase the numberOfTables by 1
-	// fseek(listOfTables , 0 , SEEK_SET);
-	// // fprintf(listOfTables , "%05d" ,  numberOfTables + 1);
-	// fclose(listOfTables);
-
-	fprintf(newTable , "%s\n" , nameOfTable);
+	fprintf(newTable , "%s\n00000\n00000\n" , nameOfTable);
 
 	char* tableColumnType = malloc(sizeof(char) * 51);
 	char* tableColumnName = malloc(sizeof(char) * 51);
 
 	printf("Type the name of the primary key column (id, for example)\n");
 	scanf("%s" , tableColumnName);
-	fprintf(newTable , "|primary %s| " , tableColumnName);
+	fprintf(newTable , "primary %s|" , tableColumnName);
 
+	colorBoldYellow();
 	puts("Now, fill the columns:");
+	colorReset();
+
 	int columnCount = 1;
 	while (true)
 	{
@@ -339,7 +323,7 @@ int createTable(char nameOfTable[])
 		if (tableColumnType[0] == '0')
 		{
 			colorBoldCyan();
-			puts("Created.");
+			puts("Table created.");
 			colorReset();
 			break;
 		}
@@ -361,11 +345,11 @@ int createTable(char nameOfTable[])
 		if (tableColumnName[0] == '0')
 		{
 			printf("Canceled \'%s\' column.\n" , tableColumnType);
-			break;
+			goto columnTypeInput;
 		}
 
 		// If the input isn't canceled by the user, register the column
-		fprintf(newTable , "|%s %s| " , tableColumnType , tableColumnName);
+		fprintf(newTable , "%s %s|" , tableColumnType , tableColumnName);
 
 		colorBoldYellow();
 		printf("Column %s (%s) inserted.\n" , tableColumnName , tableColumnType);
@@ -373,13 +357,20 @@ int createTable(char nameOfTable[])
 
 		columnCount++;
 	}
-	fclose(newTable);
+
 	free(tableColumnType);
 	free(tableColumnName);
 
-	// colorBoldCyan();
-	// printf("\nTable \'%s\' Created with %d columns\n\n", nameOfTable , columnCount - 1);
-	// colorReset();
+	fseek(newTable , 0 , SEEK_SET);
+	fscanf(newTable , "%*[^\n]\n%*d\n");
+	fprintf(newTable , "%05d\n" , columnCount - 1);
+	fclose(newTable);
+
+
+	// Adding one to the count inside of listOfTables.txt
+	listOfTables_ChangeNumber(1);
+	// Writing the new table at the end of listOfTables.txt
+	listOfTables_AddTable(nameOfTable);
 
 	return 0;
 }
@@ -495,7 +486,7 @@ int listValues(char nameOfTable[])
 int copyAndPaste(char source[] , char destination[] , int numberOfLines)
 {
 	FILE* copy = fopen(source , "r");
-	FILE* paste = fopen(destination , "wr+");
+	FILE* paste = fopen(destination , "w");
 
 	if (copy == NULL || paste == NULL)
 	{
@@ -507,7 +498,7 @@ int copyAndPaste(char source[] , char destination[] , int numberOfLines)
 		return -1;
 	}
 
-	char* aux = malloc(sizeof(char) * 10240);
+	char* aux = malloc(sizeof(char) * 4096);
 
 	// Copying all lines from copy file to paste file
 	for (int i = 0 ; i < numberOfLines ; i++)
@@ -515,20 +506,18 @@ int copyAndPaste(char source[] , char destination[] , int numberOfLines)
 		fscanf(copy , "%[^\n]\n" , aux);
 		fprintf(paste , "%s\n" , aux);
 	}
+	fclose(copy);
 	fclose(paste);
 	free(aux);
-	
-	fclose(copy);
+
 	// Cleans the source file
-	copy = fopen("tables/swap.swp" , "w");
-	fclose(copy);
+	remove("tables/swap.swp");
 	return 0;
 }
 
 
 int createColumn(char nameOfTable[])
 {
-
 	// listTables();
 	if (!tableExists(nameOfTable))
 	{
@@ -587,11 +576,6 @@ int createColumn(char nameOfTable[])
 	// Reads the columns that already exists
 	fscanf(tableToEdit , "%[^\n]\n" , aux);
 
-	// aux = primary id|int idade|string nomes|char sexo|
-	// Now check if the column already exists
-
-	// char columnsToCompare[64];
-
 	char* tableColumnName = malloc(sizeof(char) * 51);
 	printf("Especify the name of the column:\n");
 	scanf(" %s", tableColumnName);
@@ -621,3 +605,30 @@ int createColumn(char nameOfTable[])
 }
 
 
+int removeTable(char nameOfTable[])
+{
+	if (!tableExists(nameOfTable))
+	{
+		printf("Error: table doesn't exists\n");
+		return -1;
+	}
+	char* tableDirectory = malloc(sizeof(char) * 62);
+	sprintf(tableDirectory , "tables/%s.txt" , nameOfTable);
+
+	int removeStatus = remove(tableDirectory);
+
+	if (removeStatus == 1)
+	{
+		printf("Error: Unable to delete %s\n" , nameOfTable);
+		free(tableDirectory);
+		return -2; // End here
+	}
+	free(tableDirectory);
+
+	printf("File removed\n");
+
+	// Remove table from listOfTables.txt
+	listOfTables_RemoveTable(nameOfTable);
+
+	return 0;
+}

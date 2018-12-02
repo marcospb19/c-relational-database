@@ -18,7 +18,7 @@ void welcomeMessage()
 	colorBoldYellow();
 	printf("license");
 	colorReset();
-	puts("\" for more information.\n");
+	printf("\" for more information.\n");
 }
 
 // Prints the creators of the SGBD and the official repository
@@ -39,7 +39,7 @@ void creditsMessage()
 	colorBoldCyan();
 	printf("www.github.com/marcospb19/projeto-itp");
 	colorReset();
-	puts(" for more information.\n");
+	printf(" for more information.\n");
 }
 
 // Message when user quits successfully
@@ -67,47 +67,69 @@ void licenseMessage()
 void helpMessage()
 {
 	colorBoldWhite();
-	puts("List of commands:");
-
-	colorBoldRed();
-	printf("%13s: " , "create,");
-	colorReset();
-	puts("Create a table,");
+	puts(" List of commands:\n");
 
 	colorBoldYellow();
-	printf("%13s: " , "column");
-	colorReset();
-	puts("Create a column in a table,");
-
-	colorBoldYellow();
-	printf("%13s: " , "list");
-	colorReset();
-	puts("List all tables,");
-
-	colorBoldYellow();
-	printf("%13s: " , "printall");
-	colorReset();
-	puts("List all values in a table,");
-
-	colorBoldYellow();
-	printf("%13s: " , "help");
-	colorReset();
+	printf("%12s: " , "help");
+	colorWhite();
 	puts("Show this message,");
 
 	colorBoldYellow();
-	printf("%13s: " , "credits");
-	colorReset();
+	printf("%12s: " , "exit|q");
+	colorWhite();
+	puts("Exit the program,");
+
+	colorBoldYellow();
+	printf("%12s: " , "credits");
+	colorWhite();
 	puts("Show the credits,");
 
 	colorBoldYellow();
-	printf("%13s: " , "license");
-	colorReset();
-	puts("Show the license,");
+	printf("%12s: " , "license");
+	colorWhite();
+	puts("Show the license.");
+
+	puts("");
 
 	colorBoldYellow();
-	printf("%13s: " , "q | exit");
+	printf("%12s: " , "list");
+	colorWhite();
+	puts("List all tables,");
+
+	colorBoldYellow();
+	printf("%12s: " , "printtable");
+	colorWhite();
+	puts("List all data inside of a table,");
+
+	colorBoldYellow();
+	printf("%12s: " , "search");
+	colorWhite();
+	puts("Search for data inside of a chossen column table.");
+
+	puts("");
+
+	colorBoldYellow();
+	printf("%12s: " , "create");
+	colorWhite();
+	puts("Create a table,");
+
+	colorBoldYellow();
+	printf("%12s: " , "line");
+	colorWhite();
+	puts("Create a line inside of a table,");
+
+	colorBoldYellow();
+	printf("%12s: " , "column");
+	colorWhite();
+	puts("Create a column in a table,");
+
+	colorBoldYellow();
+	printf("%12s: " , "remove");
+	colorWhite();
+	puts("Delete table from the system.");
+
+
 	colorReset();
-	puts("Exit the program.");
 }
 
 

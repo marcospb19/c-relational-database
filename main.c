@@ -3,9 +3,8 @@
 #include <stdbool.h>
 #include "libraries/list.h"
 #include "libraries/tables.h"
-#include "libraries/commands.h"
 #include "libraries/messages.h"
-
+#include "libraries/command.h"
 
 
 int main()
@@ -16,9 +15,9 @@ int main()
 	while (true)
 	{
 		input:
-		printf("»»» ");
-
+		printf("\n»»» ");
 		fgets(userInput , 256 , stdin);
+
 		// If the user enters nothing, take input again
 		if (userInput[0] == '\n')
 			goto input;
@@ -26,75 +25,69 @@ int main()
 		// fgets leave the \n at the end, so we need to replace it
 		userInput[strlen(userInput) - 1] = '\0';
 
-		if (strcmp(userInput , "help") == 0)
+
+		if (command(userInput , "help"))
 			helpMessage();
-		else if (strcmp(userInput , "list") == 0)
-			listTables();
-
-		else if (strcmp(userInput , "column") == 0)
+		else if (command(userInput , "exit") || userInput[0] == 'q')
 		{
-			puts("All tables available:\n");
-			listTables();
-			printf("Type the name of the table to create a column\n»»» ");
-			scanf(" %s" , userInput);
-			createColumn(userInput);
+			finishMessage();
+			break;
 		}
-		else if (strcmp(userInput , "column") == 0)
-		{
-			puts("All tables available:\n");
-			listTables();
-			printf("Type the name of the table to create a column\n»»» ");
-			scanf(" %s" , userInput);
-			listValues(userInput);
-		}
+		else if (command(userInput , "license"))
+			licenseMessage();
+		else if (command(userInput , "credits"))
+			creditsMessage();
 
-		else if (strcmp(userInput , "printall") == 0)
+
+		else if (command(userInput , "list"))
+			listTables();
+		else if (command(userInput , "printtable"))
 		{
-			puts("All tables available:\n");
 			listTables();
 			printf("Type the name of the table to list all values\n»»» ");
 			scanf(" %s" , userInput);
 			listValues(userInput);
 		}
-
-
-
-		else if (strcmp(userInput , "line") == 0)
-			createLine(); // createLine don't works yet
-		else if (strcmp(userInput , "license") == 0)
-			licenseMessage();
-		else if (strcmp(userInput , "credits") == 0)
-			creditsMessage();
-
-		// strcommand return 0 if "create" is at the start of the input.
-		else if (strcommand(userInput , "create"))
+		else if (command(userInput , "search"))
 		{
-			printf("Type the name of the table\n»»» ");
-			scanf(" %s" , userInput);
-			createTable(userInput);
-		}
-
-		else if (strcommand(userInput , "search"))
-		{
-			printf("All tables:\n");
 			listTables();
 			printf("Type the name of the table\n»»» ");
 			scanf(" %s" , userInput);
 			searchData(userInput);
 		}
 
-		// Quit
-		else if (strcmp(userInput , "exit") == 0 ||
-		         userInput[0] == 'q')
+
+		else if (command(userInput , "create"))
 		{
-			finishMessage();
-			break;
+			listTables();
+			printf("Type the name of the table to create\n»»» ");
+			scanf(" %s" , userInput);
+			createTable(userInput);
+		}
+		else if (command(userInput , "line"))
+		{
+			printf("Type the name of the table to create\n»»» ");
+			scanf(" %s" , userInput);
+			createTable(userInput);
+			createLine(); // createLine don't works yet
+		}
+		else if (command(userInput , "column"))
+		{
+			listTables();
+			printf("Type the name of the table to create a column\n»»» ");
+			scanf(" %s" , userInput);
+			createColumn(userInput);
+		}
+		else if (command(userInput , "remove"))
+		{
+			listTables();
+			printf("Type the name of the table to remove\n»»» ");
+			scanf(" %s" , userInput);
+			removeTable(userInput);
 		}
 
-		// If no command is detected
-		else
-			noInputMessage();
 
-		puts("");
+		else // If no command is detected
+			noInputMessage();
 	}
 }

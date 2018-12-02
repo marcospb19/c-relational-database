@@ -9,7 +9,7 @@ char* listOfTables_Directory;
 int listTables();
 // List all the tables inside of listOfTables.txt
 
-int listOfTables_TableListNumber(int change);
+int listOfTables_ChangeNumber(int change);
 // This function changes the number of tables inside of listOfTables.txt (first line)
 
 int listOfTables_NumberOfTables();
