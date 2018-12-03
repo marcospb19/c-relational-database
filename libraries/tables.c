@@ -376,72 +376,12 @@ int createTable(char nameOfTable[])
 }
 
 
-// Not completed?
-int createLine()
-{
-	FILE* listOfTables = fopen("tables/listOfTables.txt" , "r+");
-	if (listOfTables == NULL)
-	{
-		printf("ERROR: Fail to open listOfTables.txt\n");
-		return -1;
-	}
-
-
-	printf("Type the name of the table you want to insert a line.\n");
-	// 50 is the maximium size of a table name
-	char* nameOfTable = malloc(sizeof(char) * 51);
-	char* tablesToCompare = malloc(sizeof(char) * 51);
-	scanf("%s", nameOfTable);
-
-	int numberOfTables;
-	fscanf(listOfTables , "%d\n" , &numberOfTables);
-
-	bool notFound = true;
-	// This for will check if the table exists
-	for (int i = 0 ; i < numberOfTables ; i++)
-	{
-		// Get the table in that line
-		fscanf(listOfTables , "%s\n" , tablesToCompare);
-
-		// Check if the table already exists
-		if (strcmp(tablesToCompare , nameOfTable) == 0)
-		{
-			char* directoryAuxiliar = malloc(sizeof(char) * 62);
-			strcpy(directoryAuxiliar , "tables/");
-			strcat(directoryAuxiliar , nameOfTable);
-			strcat(directoryAuxiliar , ".txt");
-
-			FILE* tableToChange = fopen(directoryAuxiliar , "r+");
-			if (tableToChange == NULL)
-				return -2;
-
-			free(directoryAuxiliar);
-
-			fseek(tableToChange , 0 , SEEK_END);
-
-			// char*
-
-			notFound = false;
-			break;
-		}
-	}
-	if (notFound) // If table do not exists
-		return -3;
-
-	fclose(listOfTables);
-
-	free(tablesToCompare);
-	free(nameOfTable);
-	return 0;
-}
-
-
-
+// Print all values inside a table
 int listValues(char nameOfTable[])
 {
 	if (!tableExists(nameOfTable))
 	{
-		printf("Table don't exists.\n");
+		printf("Table doesn't exists.\n");
 		return -1;
 	}
 
@@ -634,8 +574,8 @@ int removeTable(char nameOfTable[])
 }
 
 
-// Returns 1 if the id already exists, 0 if doesn't or any error occurs
-int idExists(char nameOfTable[] , int primaryKey)
+// Returns 1 if the primaryKey already exists, 0 if doesn't or any error occurs
+int primaryKeyExists(char nameOfTable[] , int primaryKey)
 {
 	if (!tableExists(nameOfTable))
 	{
@@ -681,6 +621,86 @@ int idExists(char nameOfTable[] , int primaryKey)
 
 	}
 
+	freeTableStruct(tableStruct);
+	return 0;
+}
+
+
+// Creates a line at the end of the table argument
+int createLine(char nameOfTable[])
+{
+	if (!tableExists(nameOfTable))
+	{
+		puts("tabela nao existe");
+		return -1;
+	}
+	int primaryKey;
+	printf("Type the primarykey value of the new line: \n");
+	scanf(" %d" , &primaryKey);
+	if (primaryKeyExists(nameOfTable , primaryKey))
+	{
+		puts("error, primaryKey already exists");
+		return 0;
+	}
+	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
+	if (tableStruct == NULL)
+	{
+		puts("erro ao carregar tableStruct");
+		return -2;
+	}
+
+	char* directoryAuxiliar = malloc(sizeof(char) * 62);
+	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
+
+	// Opening with append
+	FILE* tableAppend = fopen(directoryAuxiliar, "a");
+	if (tableAppend == NULL)
+	{
+		freeTableStruct(tableStruct);
+		puts("erro ao abrir tableAppend");
+		return -3;
+	}
+	free(directoryAuxiliar);
+	fprintf(tableAppend , "%d|" , primaryKey);
+
+	// Declarar todos os tipos para possível uso
+
+	int INT_;
+	float FLOAT_;
+	char CHAR_;
+	char STRING_[125];
+
+	for (int i = 0 ; i < tableStruct->quantityOfColumns ; i++)
+	{
+		printf("Atualmente na coluna %d\n" , i);
+		if (tableStruct->types[i] == int_)
+		{
+			printf("Fill the column %s (int)\n" , tableStruct->columnNames[i]);
+			scanf(" %d" , &INT_);
+			fprintf(tableAppend , "%d|" , INT_);
+		}
+		else if (tableStruct->types[i] == float_)
+		{
+			printf("Fill the column %s (float)\n" , tableStruct->columnNames[i]);
+			scanf(" %f" , &FLOAT_);
+			fprintf(tableAppend , "%f|" , FLOAT_);
+		}
+		else if (tableStruct->types[i] == char_)
+		{
+			printf("Fill the column %s (char)\n" , tableStruct->columnNames[i]);
+			scanf(" %c" , &CHAR_);
+			fprintf(tableAppend , "%c|" , CHAR_);
+		}
+		else if (tableStruct->types[i] == string_)
+		{
+			printf("Fill the column %s (string)\n" , tableStruct->columnNames[i]);
+			scanf(" %[^\n]" , STRING_);
+			fprintf(tableAppend , "%s|" , STRING_);
+		}
+	}
+	printf("Line created!!\n");
+	fputs("\n" , tableAppend);
+	fclose(tableAppend);
 	freeTableStruct(tableStruct);
 	return 0;
 }

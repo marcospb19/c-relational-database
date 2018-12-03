@@ -29,7 +29,7 @@ int listTables()
 		fscanf(listOfTables , "%[^\n]\n" , lines);
 		printf("   %s\n", lines);
 	}
-
+	printf("\n");
 	free(lines);
 	fclose(listOfTables);
 

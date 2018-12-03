@@ -95,7 +95,7 @@ Você deve encontrar no log alguns vazamentos que ainda não foram consertados
 ## *_Progresso:_*
 - [x] 1) Criar um tabela
 - [x] 2) Listar todas as tabelas
-- [ ] 3) Criar uma nova linha na tabela
+- [x] 3) Criar uma nova linha na tabela
 - [ ] 4) Editar os valores de uma tabela
 - [x] 5) Criar uma nova coluna na tabela
 - [x] 6) Listar todos os dados de uma tabela

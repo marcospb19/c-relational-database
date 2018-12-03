@@ -66,10 +66,10 @@ int main()
 		}
 		else if (command(userInput , "line"))
 		{
-			printf("Type the name of the table to create\n»»» ");
+			listTables();
+			printf("Type the name of the table to create a line\n»»» ");
 			scanf(" %s" , userInput);
-			createTable(userInput);
-			createLine(); // createLine doesn't works yet
+			createLine(userInput); // createLine doesn't works yet
 		}
 		else if (command(userInput , "column"))
 		{

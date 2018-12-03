@@ -13,9 +13,6 @@ int copyAndPaste(char source[] , char destination[] , int numberOfLines);
 // Copys everything inside of source to destination
 // Used to modify tables, for example
 
-int createLine();
-// Inserts a line
-
 int createColumn(char nameOfTable[]);
 // Creates a column
 
@@ -28,7 +25,10 @@ int tableExists(char nameOfTable[]);
 int removeTable(char nameOfTable[]);
 // Delete a table with the following format tables/nameOfTable.txt
 
-int idExists(char nameOfTable[] , int primaryKey);
+int primaryKeyExists(char nameOfTable[] , int primaryKey);
 // Returns 1 if the id already exists, 0 if doesn't or any error occurs
+
+int createLine(char nameOfTable[]);
+// Inserts a line
 
 #endif
