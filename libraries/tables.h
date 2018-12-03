@@ -31,4 +31,7 @@ int primaryKeyExists(char nameOfTable[] , int primaryKey);
 int createLine(char nameOfTable[]);
 // Inserts a line
 
+int editLine(char nameOfTable[]);
+// Edit a choosen line inside
+
 #endif

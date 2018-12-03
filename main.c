@@ -69,7 +69,7 @@ int main()
 			listTables();
 			printf("Type the name of the table to create a line\n»»» ");
 			scanf(" %s" , userInput);
-			createLine(userInput); // createLine doesn't works yet
+			createLine(userInput);
 		}
 		else if (command(userInput , "column"))
 		{
@@ -85,6 +85,14 @@ int main()
 			scanf(" %s" , userInput);
 			removeTable(userInput);
 		}
+		else if (command(userInput , "edit"))
+		{
+			listTables();
+			printf("Type the name of the table to edit a line\n»»» ");
+			scanf(" %s" , userInput);
+			editLine(userInput);
+		}
+
 
 
 		else // If no command is detected

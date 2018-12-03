@@ -402,7 +402,7 @@ int listValues(char nameOfTable[])
 
 	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
 
-	char aux[1024];
+	char aux[2048];
 
 	for (int i = 0 ; i < tableStruct->quantityOfLines ; i++)
 	{
@@ -702,5 +702,133 @@ int createLine(char nameOfTable[])
 	fputs("\n" , tableAppend);
 	fclose(tableAppend);
 	freeTableStruct(tableStruct);
+	return 0;
+}
+
+
+// Edit a choosen line inside
+int editLine(char nameOfTable[])
+{
+	if (!tableExists(nameOfTable))
+	{
+		puts("tabela nao existe");
+		return -1;
+	}
+	printf("Type the primarykey value of the new line (negative to cancel): \n");
+
+	int primaryKey;
+	inputEditLine:;
+
+	scanf(" %d" , &primaryKey);
+
+	if (primaryKey < 0)
+	{
+		printf("Exiting...\n");
+		return 0;
+	}
+
+	if (!primaryKeyExists(nameOfTable , primaryKey))
+	{
+		puts("error, primaryKey don't exists");
+		printf("Type the primaryKey again:\n");
+		goto inputEditLine;
+	}
+
+	char* directoryAuxiliar = malloc(sizeof(char) * 62);
+	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
+	FILE* tableRead = fopen(directoryAuxiliar, "r");
+
+	if (tableRead == NULL)
+	{
+		free(directoryAuxiliar);
+		puts("erro ao abrir tableRead");
+		return -2;
+	}
+
+
+	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
+	if (tableStruct == NULL)
+	{
+		free(directoryAuxiliar);
+		fclose(tableRead);
+		puts("erro ao carregar tableStruct");
+		return -3;
+	}
+
+	FILE* tableWrite = fopen("swap.swp" , "wr+");
+
+	char aux[2048];
+
+	// Skips 3 lines and copies the fourth to pass to the tableWrite
+	// 										This
+	fscanf(tableRead , "%*[^\n]\n%*d\n%*d\n%[^\n]\n" , aux);
+
+	fprintf(tableWrite , "%s\n%05d\n%05d\n%s\n", nameOfTable , tableStruct->quantityOfLines , tableStruct->quantityOfColumns , aux);
+
+	int primaryKeySearch;
+
+	// Scans the primary key, if found, starts replacing this line
+	int i;
+	for (i = 0; i < tableStruct->quantityOfLines; ++i)
+	{
+		fscanf(tableRead , "%d|" , &primaryKeySearch);
+		if (primaryKey == primaryKeySearch)
+		{
+			printf("Editing line with primary key \'%d\'\n" , primaryKey);
+			break;
+		}
+		fscanf(tableRead , "%[^\n]\n" , aux);
+		fprintf(tableWrite , "%d|%s\n" , primaryKey , aux);
+	}
+
+	int INT_;
+	float FLOAT_;
+	char CHAR_;
+	char STRING_[256];
+
+	for (int j = 0 ; j < tableStruct->quantityOfColumns ; j++)
+	{
+		printf("Atualmente na coluna %d\n" , j);
+		if (tableStruct->types[j] == int_)
+		{
+			printf("Edit the column %s (int)\n" , tableStruct->columnNames[j]);
+			scanf(" %d" , &INT_);
+			fprintf(tableWrite , "%d|" , INT_);
+		}
+		else if (tableStruct->types[j] == float_)
+		{
+			printf("Edit the column %s (float)\n" , tableStruct->columnNames[j]);
+			scanf(" %f" , &FLOAT_);
+			fprintf(tableWrite , "%f|" , FLOAT_);
+		}
+		else if (tableStruct->types[j] == char_)
+		{
+			printf("Edit the column %s (char)\n" , tableStruct->columnNames[j]);
+			scanf(" %c" , &CHAR_);
+			fprintf(tableWrite , "%c|" , CHAR_);
+		}
+		else if (tableStruct->types[j] == string_)
+		{
+			printf("Edit the column %s (string)\n" , tableStruct->columnNames[j]);
+			scanf(" %[^\n]" , STRING_);
+			fprintf(tableWrite , "%s|" , STRING_);
+		}
+	}
+
+
+	for (int j = i + 1 ; j < tableStruct->quantityOfLines ; j++)
+	{
+		fscanf(tableRead , "%[^\n]\n" , aux);
+		fprintf(tableWrite , "%s\n" , aux);
+	}
+
+	printf("Line Edited!!\n");
+
+	fclose(tableWrite);
+	fclose(tableRead);
+
+	copyAndPaste("swap.swp" , directoryAuxiliar , tableStruct->quantityOfLines + 4);
+	// Opening with append
+	free(directoryAuxiliar);
 	return 0;
 }

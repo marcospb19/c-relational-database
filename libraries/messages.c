@@ -113,10 +113,15 @@ void helpMessage()
 	colorWhite();
 	puts("Create a table,");
 
-	colorBoldRed();
+	colorBoldYellow();
 	printf("%12s: " , "line");
 	colorWhite();
-	puts("Create a line inside of a table,");
+	puts("Create a line inside of a choosen table,");
+
+	colorBoldYellow();
+	printf("%12s: " , "edit");
+	colorWhite();
+	puts("Edit a line inside of a choosen table,");
 
 	colorBoldYellow();
 	printf("%12s: " , "column");
