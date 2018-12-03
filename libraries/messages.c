@@ -113,7 +113,7 @@ void helpMessage()
 	colorWhite();
 	puts("Create a table,");
 
-	colorBoldYellow();
+	colorBoldRed();
 	printf("%12s: " , "line");
 	colorWhite();
 	puts("Create a line inside of a table,");

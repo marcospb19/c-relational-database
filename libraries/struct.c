@@ -48,7 +48,7 @@ tableStruct_t* loadTableStruct(char nameOfTable[])
 	FILE* loadingTable = fopen(directory , "r");
 	free(directory);
 
-	// If fails to open or don't exists
+	// If fails to open or doesn't exists
 	if (loadingTable == NULL)
 	{
 		printf("Fail to load tableStruct\n");

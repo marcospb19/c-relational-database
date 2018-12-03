@@ -69,7 +69,7 @@ int main()
 			printf("Type the name of the table to create\n»»» ");
 			scanf(" %s" , userInput);
 			createTable(userInput);
-			createLine(); // createLine don't works yet
+			createLine(); // createLine doesn't works yet
 		}
 		else if (command(userInput , "column"))
 		{

@@ -17,7 +17,7 @@ int tableExists(char nameOfTable[])
 	free(tableDirectory);
 	if (table == NULL)
 	{
-		return 0; // Table don't exists
+		return 0; // Table doesn't exists
 	}
 	fclose(table);
 	return 1;
@@ -32,8 +32,8 @@ int searchData(char nameOfTable[])
 		return -1;
 	}
 
-	char* directoryAuxiliar = malloc(sizeof(char) * 62);
-	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
+	char* tableDirectory = malloc(sizeof(char) * 62);
+	sprintf(tableDirectory , "tables/%s.txt" , nameOfTable);
 
 	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
 	if (tableStruct == NULL)
@@ -42,16 +42,16 @@ int searchData(char nameOfTable[])
 		return -2;
 	}
 
-	FILE* table = fopen(directoryAuxiliar , "r");
+	FILE* table = fopen(tableDirectory , "r");
 	if (table == NULL)
 	{
 		freeTableStruct(tableStruct);
-		printf("ERROR: could not open %s\n" , directoryAuxiliar);
+		printf("ERROR: could not open %s\n" , tableDirectory);
 		return -3;
 	}
 
-	printf("Opened %s\n" , directoryAuxiliar);
-	free(directoryAuxiliar);
+	printf("Opened %s\n" , tableDirectory);
+	free(tableDirectory);
 
 	printf("CHOOSE A COLUMN TO SEARCH:\n");
 	for (int i = 0; i < tableStruct->quantityOfColumns; ++i)
@@ -521,7 +521,7 @@ int createColumn(char nameOfTable[])
 	// listTables();
 	if (!tableExists(nameOfTable))
 	{
-		printf("Table don't exists.\n");
+		printf("Table doesn't exists.\n");
 		return -1;
 	}
 
@@ -639,7 +639,7 @@ int idExists(char nameOfTable[] , int primaryKey)
 {
 	if (!tableExists(nameOfTable))
 	{
-		printf("Error: this table don't exists\n");
+		printf("Error: this table doesn't exists\n");
 		return 0;
 	}
 
@@ -654,6 +654,8 @@ int idExists(char nameOfTable[] , int primaryKey)
 		return 0;
 	}
 
+	// Stop being lazy, this is very bad
+	// It's unnecessary use of load function
 	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
 
 	if (tableStruct == NULL)
