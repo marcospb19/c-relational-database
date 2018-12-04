@@ -34,4 +34,7 @@ int createLine(char nameOfTable[]);
 int editLine(char nameOfTable[]);
 // Edit a choosen line inside
 
+int removeData(char nameOfTable[]);
+// Remove a line from the table
+
 #endif

@@ -283,13 +283,16 @@ int createTable(char nameOfTable[])
 		return -1;
 	}
 
+
 	char* newTableDirectory = malloc(sizeof(char) * 62);
 	sprintf(newTableDirectory , "tables/%s.txt" , nameOfTable);
+
 	FILE* newTable = fopen(newTableDirectory , "wr+");
 	if (newTable == NULL)
 	{
 		puts("ERROR: Fail to open the new table.");
 		return -2;
+
 	}
 	colorBoldYellow();
 	printf("Table created at: %s\n" , newTableDirectory);
@@ -634,14 +637,17 @@ int createLine(char nameOfTable[])
 		puts("tabela nao existe");
 		return -1;
 	}
+
 	int primaryKey;
 	printf("Type the primarykey value of the new line: \n");
 	scanf(" %d" , &primaryKey);
+
 	if (primaryKeyExists(nameOfTable , primaryKey))
 	{
 		puts("error, primaryKey already exists");
 		return 0;
 	}
+
 	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
 	if (tableStruct == NULL)
 	{
@@ -652,15 +658,16 @@ int createLine(char nameOfTable[])
 	char* directoryAuxiliar = malloc(sizeof(char) * 62);
 	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
 
-	// Opening with append
-	FILE* tableAppend = fopen(directoryAuxiliar, "a");
+	FILE* tableAppend = fopen(directoryAuxiliar, "r+");
+	free(directoryAuxiliar);
 	if (tableAppend == NULL)
 	{
 		freeTableStruct(tableStruct);
 		puts("erro ao abrir tableAppend");
 		return -3;
 	}
-	free(directoryAuxiliar);
+
+	fseek(tableAppend , 0 , SEEK_END);
 	fprintf(tableAppend , "%d|" , primaryKey);
 
 	// Declarar todos os tipos para possível uso
@@ -672,7 +679,7 @@ int createLine(char nameOfTable[])
 
 	for (int i = 0 ; i < tableStruct->quantityOfColumns ; i++)
 	{
-		printf("Atualmente na coluna %d\n" , i);
+		printf("Atualmente na coluna %d\n" , i + 1);
 		if (tableStruct->types[i] == int_)
 		{
 			printf("Fill the column %s (int)\n" , tableStruct->columnNames[i]);
@@ -699,7 +706,15 @@ int createLine(char nameOfTable[])
 		}
 	}
 	printf("Line created!!\n");
+
+	// Now update the number of lines going back
+	fseek(tableAppend , 0 , SEEK_SET);
+	fprintf(tableAppend , "%s\n%05d" , nameOfTable , tableStruct->quantityOfLines + 1);
+
+	// Skips 1 line and gets the number of lines
+	fseek(tableAppend , 0 , SEEK_END);
 	fputs("\n" , tableAppend);
+
 	fclose(tableAppend);
 	freeTableStruct(tableStruct);
 	return 0;
@@ -717,6 +732,7 @@ int editLine(char nameOfTable[])
 	printf("Type the primarykey value of the new line (negative to cancel): \n");
 
 	int primaryKey;
+
 	inputEditLine:;
 
 	scanf(" %d" , &primaryKey);
@@ -761,24 +777,25 @@ int editLine(char nameOfTable[])
 
 	// Skips 3 lines and copies the fourth to pass to the tableWrite
 	// 										This
-	fscanf(tableRead , "%*[^\n]\n%*d\n%*d\n%[^\n]\n" , aux);
+	fscanf(tableRead , "%*[^\n]\n%*[^\n]\n%*[^\n]\n%[^\n]\n" , aux);
 
 	fprintf(tableWrite , "%s\n%05d\n%05d\n%s\n", nameOfTable , tableStruct->quantityOfLines , tableStruct->quantityOfColumns , aux);
 
 	int primaryKeySearch;
 
 	// Scans the primary key, if found, starts replacing this line
-	int i;
-	for (i = 0; i < tableStruct->quantityOfLines; ++i)
+	int i; // Separated i from the loop to register where it stopped
+	for (i = 0 ; i < tableStruct->quantityOfLines ; i++)
 	{
 		fscanf(tableRead , "%d|" , &primaryKeySearch);
+		fprintf(tableWrite , "%d|" , primaryKey);
 		if (primaryKey == primaryKeySearch)
 		{
-			printf("Editing line with primary key \'%d\'\n" , primaryKey);
+			printf("\nEditing line with primary key \'%d\'\n" , primaryKey);
 			break;
 		}
 		fscanf(tableRead , "%[^\n]\n" , aux);
-		fprintf(tableWrite , "%d|%s\n" , primaryKey , aux);
+		fprintf(tableWrite , "%s\n" , aux);
 	}
 
 	int INT_;
@@ -786,9 +803,10 @@ int editLine(char nameOfTable[])
 	char CHAR_;
 	char STRING_[256];
 
+	fscanf(tableRead , "%*[^\n]\n");
 	for (int j = 0 ; j < tableStruct->quantityOfColumns ; j++)
 	{
-		printf("Atualmente na coluna %d\n" , j);
+		printf("Atualmente na coluna %d\n" , j + 1);
 		if (tableStruct->types[j] == int_)
 		{
 			printf("Edit the column %s (int)\n" , tableStruct->columnNames[j]);
@@ -815,6 +833,8 @@ int editLine(char nameOfTable[])
 		}
 	}
 
+	fputs("\n" , tableWrite);
+
 
 	for (int j = i + 1 ; j < tableStruct->quantityOfLines ; j++)
 	{
@@ -831,4 +851,90 @@ int editLine(char nameOfTable[])
 	// Opening with append
 	free(directoryAuxiliar);
 	return 0;
+}
+
+
+// Remove a line from the table
+int removeData(char nameOfTable[])
+{
+	if (!tableExists(nameOfTable))
+	{
+		printf("Error: table doesn't exists.\n");
+		return -1;
+	}
+
+	tableStruct_t* tableStruct = loadTableStruct(nameOfTable);
+
+	if (tableStruct == NULL)
+	{
+		printf("Error trying to load struct\n");
+		return -55;
+	}
+
+	char* directoryAuxiliar = malloc(sizeof(char) * 62);
+	sprintf(directoryAuxiliar , "tables/%s.txt" , nameOfTable);
+
+	FILE* tableToEdit = fopen(directoryAuxiliar , "r");
+	if (tableToEdit == NULL)
+	{
+		free(directoryAuxiliar);
+		freeTableStruct(tableStruct);
+		printf("Error trying to open table to erase\n");
+		return -2;
+	}
+
+	int primaryKey;
+	printf("Type the primaryKey of the line to erase\n");
+	scanf(" %d" , &primaryKey);
+
+	if (!primaryKeyExists(nameOfTable , primaryKey))
+	{
+		free(directoryAuxiliar);
+		freeTableStruct(tableStruct);
+		printf("This primary key was not found!\n");
+		fclose(tableToEdit);
+		return -3;
+	}
+
+	char aux[2048];
+	FILE* swapFile = fopen("tables/swap.swp" , "wr+");
+	for (int i = 0 ; i < 4 ; i++)
+	{
+		fscanf(tableToEdit , "%[^\n]\n" , aux);
+		fprintf(swapFile , "%s\n" , aux);
+	}
+
+
+	int primaryKeySearch;
+
+	// Scans the primary key, if found, starts replacing this line
+	int i; // Separated i from the loop to register where it stopped
+	for (i = 0 ; i < tableStruct->quantityOfLines ; i++)
+	{
+		fscanf(tableToEdit , "%d|" , &primaryKeySearch);
+		// fprintf(swapFile , "%d|" , primaryKey);
+		if (primaryKey == primaryKeySearch)
+			break;
+
+		fscanf(tableToEdit , "%[^\n]\n" , aux);
+		fprintf(swapFile , "%d|%s\n" , primaryKeySearch , aux);
+	}
+
+	fscanf(tableToEdit , "%*[^\n]\n");
+	for (int j = i + 1 ; j < tableStruct->quantityOfLines ; j++)
+	{
+		fscanf(tableToEdit , "%[^\n]\n" , aux);
+		fprintf(swapFile , "%s\n" , aux);
+	}
+
+	fclose(swapFile);
+	fclose(tableToEdit);
+
+
+	copyAndPaste("tables/swap.swp" , directoryAuxiliar , tableStruct->quantityOfLines + 3);
+
+	free(directoryAuxiliar);
+	freeTableStruct(tableStruct);
+	return 0;
+
 }

@@ -11,3 +11,10 @@ test*
 
 # File used to track commit progress
 commitLog.txt
+
+
+
+CMakeCache*
+cmake_install.cmake
+CMakeFiles/
+Makefile

@@ -7,17 +7,6 @@
 >*Guilherme Lira*
 
 
-## *_AVISO_*
-
-O sistema ainda não pronto para uso, pois as funções de editar dados ainda não estão prontas
-
-Isto é, as funções mais importantes de um sistema de banco de dados
-
-### :D
-
-Muito Muito brevemente o sistema estará funcional, observe no final desta página o progresso.
-
-
 ## *_Funcionalidade_*
 
 O SGBD ITP permitirá ao usuário criar, manipular e deletar tabelas com todos os tipos de dados básicos nativos de C.
@@ -46,16 +35,17 @@ Agora vá até o diretório onde deseja colocar a pasta desse repositório, e o 
 
 Para compilar, use o make.sh
 
-> ./make.sh
+> ./make.sh || cmake .
 
 Para rodar, execute o executável *SGBD*
 
-> ./sgbd
+> ./sgbd || make
 
 Pronto, você está usando o sgbd, escreva *help* ou leia o tópico *_Lista de Comandos_* da página para comandos do sistema.
 
 
 ## Lista de Comandos:
+
 
 >*_"help"_*          Mostra essa mensagem, \
 >*_"exit or q"_*     Sai do programa, \
@@ -69,9 +59,8 @@ Pronto, você está usando o sgbd, escreva *help* ou leia o tópico *_Lista de C
 >*_"create"_*        Cria uma tabela, \
 >*_"line"_*          Cria uma linha dentro de uma tabela, \
 >*_"column"_*        Cria uma coluna em uma tabela, \
+>*_"erase"_*         Apaga uma linha de uma tabela, \
 >*_"remove"_*        Deleta uma tabela do sistema.
-
-Ao digitar *_help_*, os comandos estarão coloridos para demonstrar sua disponibilidade
 
 
 ## *_Valgrind_*

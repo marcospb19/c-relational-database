@@ -5,6 +5,7 @@
 #include "libraries/tables.h"
 #include "libraries/messages.h"
 #include "libraries/command.h"
+#include "libraries/struct.h"
 
 
 int main()
@@ -92,8 +93,13 @@ int main()
 			scanf(" %s" , userInput);
 			editLine(userInput);
 		}
-
-
+		else if (command(userInput , "erase"))
+		{
+			listTables();
+			printf("Type the name of the table to erase a line\n»»» ");
+			scanf(" %s" , userInput);
+			removeData(userInput);
+		}
 
 		else // If no command is detected
 			noInputMessage();

@@ -4,7 +4,7 @@
 void welcomeMessage()
 {
 	colorBoldWhite();
-	printf("SGBD-ITP 0.2.2, ANSI-C");
+	printf("SGBD-ITP 0.5.0, ANSI-C");
 	colorReset();
 	printf("\nType \"");
 	colorBoldYellow();
@@ -25,7 +25,7 @@ void welcomeMessage()
 void creditsMessage()
 {
 	colorBoldWhite();
-	printf("SGBD 0.2.2-ITP");
+	printf("SGBD 0.5.0-ITP");
 	colorReset();
 	printf(" is a software made by ");
 	colorBoldWhite();
@@ -127,6 +127,11 @@ void helpMessage()
 	printf("%12s: " , "column");
 	colorWhite();
 	puts("Create a column in a table,");
+
+	colorBoldYellow();
+	printf("%12s: " , "erase");
+	colorWhite();
+	puts("Erase a file from a table,");
 
 	colorBoldYellow();
 	printf("%12s: " , "remove");
