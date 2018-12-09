@@ -9,12 +9,12 @@ tables/*
 # Any test
 test*
 
-# File used to track commit progress
-commitLog.txt
+# To do:
+# todo.txt
 
-
-
-CMakeCache*
-cmake_install.cmake
-CMakeFiles/
+# Cmake files
+cmake*
+CMake*
 Makefile
+!CMakeLists.txt
+!cmakeclean.sh 

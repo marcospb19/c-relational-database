@@ -123,168 +123,6 @@ sgbd/fast:
 	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/build
 .PHONY : sgbd/fast
 
-libraries/colors.o: libraries/colors.c.o
-
-.PHONY : libraries/colors.o
-
-# target to build an object file
-libraries/colors.c.o:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/colors.c.o
-.PHONY : libraries/colors.c.o
-
-libraries/colors.i: libraries/colors.c.i
-
-.PHONY : libraries/colors.i
-
-# target to preprocess a source file
-libraries/colors.c.i:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/colors.c.i
-.PHONY : libraries/colors.c.i
-
-libraries/colors.s: libraries/colors.c.s
-
-.PHONY : libraries/colors.s
-
-# target to generate assembly for a file
-libraries/colors.c.s:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/colors.c.s
-.PHONY : libraries/colors.c.s
-
-libraries/command.o: libraries/command.c.o
-
-.PHONY : libraries/command.o
-
-# target to build an object file
-libraries/command.c.o:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/command.c.o
-.PHONY : libraries/command.c.o
-
-libraries/command.i: libraries/command.c.i
-
-.PHONY : libraries/command.i
-
-# target to preprocess a source file
-libraries/command.c.i:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/command.c.i
-.PHONY : libraries/command.c.i
-
-libraries/command.s: libraries/command.c.s
-
-.PHONY : libraries/command.s
-
-# target to generate assembly for a file
-libraries/command.c.s:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/command.c.s
-.PHONY : libraries/command.c.s
-
-libraries/list.o: libraries/list.c.o
-
-.PHONY : libraries/list.o
-
-# target to build an object file
-libraries/list.c.o:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/list.c.o
-.PHONY : libraries/list.c.o
-
-libraries/list.i: libraries/list.c.i
-
-.PHONY : libraries/list.i
-
-# target to preprocess a source file
-libraries/list.c.i:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/list.c.i
-.PHONY : libraries/list.c.i
-
-libraries/list.s: libraries/list.c.s
-
-.PHONY : libraries/list.s
-
-# target to generate assembly for a file
-libraries/list.c.s:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/list.c.s
-.PHONY : libraries/list.c.s
-
-libraries/messages.o: libraries/messages.c.o
-
-.PHONY : libraries/messages.o
-
-# target to build an object file
-libraries/messages.c.o:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/messages.c.o
-.PHONY : libraries/messages.c.o
-
-libraries/messages.i: libraries/messages.c.i
-
-.PHONY : libraries/messages.i
-
-# target to preprocess a source file
-libraries/messages.c.i:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/messages.c.i
-.PHONY : libraries/messages.c.i
-
-libraries/messages.s: libraries/messages.c.s
-
-.PHONY : libraries/messages.s
-
-# target to generate assembly for a file
-libraries/messages.c.s:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/messages.c.s
-.PHONY : libraries/messages.c.s
-
-libraries/struct.o: libraries/struct.c.o
-
-.PHONY : libraries/struct.o
-
-# target to build an object file
-libraries/struct.c.o:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/struct.c.o
-.PHONY : libraries/struct.c.o
-
-libraries/struct.i: libraries/struct.c.i
-
-.PHONY : libraries/struct.i
-
-# target to preprocess a source file
-libraries/struct.c.i:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/struct.c.i
-.PHONY : libraries/struct.c.i
-
-libraries/struct.s: libraries/struct.c.s
-
-.PHONY : libraries/struct.s
-
-# target to generate assembly for a file
-libraries/struct.c.s:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/struct.c.s
-.PHONY : libraries/struct.c.s
-
-libraries/tables.o: libraries/tables.c.o
-
-.PHONY : libraries/tables.o
-
-# target to build an object file
-libraries/tables.c.o:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/tables.c.o
-.PHONY : libraries/tables.c.o
-
-libraries/tables.i: libraries/tables.c.i
-
-.PHONY : libraries/tables.i
-
-# target to preprocess a source file
-libraries/tables.c.i:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/tables.c.i
-.PHONY : libraries/tables.c.i
-
-libraries/tables.s: libraries/tables.c.s
-
-.PHONY : libraries/tables.s
-
-# target to generate assembly for a file
-libraries/tables.c.s:
-	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/libraries/tables.c.s
-.PHONY : libraries/tables.c.s
-
 main.o: main.c.o
 
 .PHONY : main.o
@@ -312,6 +150,168 @@ main.c.s:
 	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/main.c.s
 .PHONY : main.c.s
 
+source/colors.o: source/colors.c.o
+
+.PHONY : source/colors.o
+
+# target to build an object file
+source/colors.c.o:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/colors.c.o
+.PHONY : source/colors.c.o
+
+source/colors.i: source/colors.c.i
+
+.PHONY : source/colors.i
+
+# target to preprocess a source file
+source/colors.c.i:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/colors.c.i
+.PHONY : source/colors.c.i
+
+source/colors.s: source/colors.c.s
+
+.PHONY : source/colors.s
+
+# target to generate assembly for a file
+source/colors.c.s:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/colors.c.s
+.PHONY : source/colors.c.s
+
+source/command.o: source/command.c.o
+
+.PHONY : source/command.o
+
+# target to build an object file
+source/command.c.o:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/command.c.o
+.PHONY : source/command.c.o
+
+source/command.i: source/command.c.i
+
+.PHONY : source/command.i
+
+# target to preprocess a source file
+source/command.c.i:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/command.c.i
+.PHONY : source/command.c.i
+
+source/command.s: source/command.c.s
+
+.PHONY : source/command.s
+
+# target to generate assembly for a file
+source/command.c.s:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/command.c.s
+.PHONY : source/command.c.s
+
+source/list.o: source/list.c.o
+
+.PHONY : source/list.o
+
+# target to build an object file
+source/list.c.o:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/list.c.o
+.PHONY : source/list.c.o
+
+source/list.i: source/list.c.i
+
+.PHONY : source/list.i
+
+# target to preprocess a source file
+source/list.c.i:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/list.c.i
+.PHONY : source/list.c.i
+
+source/list.s: source/list.c.s
+
+.PHONY : source/list.s
+
+# target to generate assembly for a file
+source/list.c.s:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/list.c.s
+.PHONY : source/list.c.s
+
+source/messages.o: source/messages.c.o
+
+.PHONY : source/messages.o
+
+# target to build an object file
+source/messages.c.o:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/messages.c.o
+.PHONY : source/messages.c.o
+
+source/messages.i: source/messages.c.i
+
+.PHONY : source/messages.i
+
+# target to preprocess a source file
+source/messages.c.i:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/messages.c.i
+.PHONY : source/messages.c.i
+
+source/messages.s: source/messages.c.s
+
+.PHONY : source/messages.s
+
+# target to generate assembly for a file
+source/messages.c.s:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/messages.c.s
+.PHONY : source/messages.c.s
+
+source/struct.o: source/struct.c.o
+
+.PHONY : source/struct.o
+
+# target to build an object file
+source/struct.c.o:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/struct.c.o
+.PHONY : source/struct.c.o
+
+source/struct.i: source/struct.c.i
+
+.PHONY : source/struct.i
+
+# target to preprocess a source file
+source/struct.c.i:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/struct.c.i
+.PHONY : source/struct.c.i
+
+source/struct.s: source/struct.c.s
+
+.PHONY : source/struct.s
+
+# target to generate assembly for a file
+source/struct.c.s:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/struct.c.s
+.PHONY : source/struct.c.s
+
+source/tables.o: source/tables.c.o
+
+.PHONY : source/tables.o
+
+# target to build an object file
+source/tables.c.o:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/tables.c.o
+.PHONY : source/tables.c.o
+
+source/tables.i: source/tables.c.i
+
+.PHONY : source/tables.i
+
+# target to preprocess a source file
+source/tables.c.i:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/tables.c.i
+.PHONY : source/tables.c.i
+
+source/tables.s: source/tables.c.s
+
+.PHONY : source/tables.s
+
+# target to generate assembly for a file
+source/tables.c.s:
+	$(MAKE) -f CMakeFiles/sgbd.dir/build.make CMakeFiles/sgbd.dir/source/tables.c.s
+.PHONY : source/tables.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -321,27 +321,27 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... sgbd"
 	@echo "... edit_cache"
-	@echo "... libraries/colors.o"
-	@echo "... libraries/colors.i"
-	@echo "... libraries/colors.s"
-	@echo "... libraries/command.o"
-	@echo "... libraries/command.i"
-	@echo "... libraries/command.s"
-	@echo "... libraries/list.o"
-	@echo "... libraries/list.i"
-	@echo "... libraries/list.s"
-	@echo "... libraries/messages.o"
-	@echo "... libraries/messages.i"
-	@echo "... libraries/messages.s"
-	@echo "... libraries/struct.o"
-	@echo "... libraries/struct.i"
-	@echo "... libraries/struct.s"
-	@echo "... libraries/tables.o"
-	@echo "... libraries/tables.i"
-	@echo "... libraries/tables.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... source/colors.o"
+	@echo "... source/colors.i"
+	@echo "... source/colors.s"
+	@echo "... source/command.o"
+	@echo "... source/command.i"
+	@echo "... source/command.s"
+	@echo "... source/list.o"
+	@echo "... source/list.i"
+	@echo "... source/list.s"
+	@echo "... source/messages.o"
+	@echo "... source/messages.i"
+	@echo "... source/messages.s"
+	@echo "... source/struct.o"
+	@echo "... source/struct.i"
+	@echo "... source/struct.s"
+	@echo "... source/tables.o"
+	@echo "... source/tables.i"
+	@echo "... source/tables.s"
 .PHONY : help
 
 

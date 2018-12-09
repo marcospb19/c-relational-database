@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.10.2)
 project(sgbd C)
 
-include_directories(libraries)
+include_directories(source)
 
-set(SOURCES libraries/struct.c libraries/command.c libraries/list.c libraries/colors.c libraries/messages.c libraries/tables.c main.c)
+set(SOURCES source/struct.c source/command.c source/list.c source/colors.c source/messages.c source/tables.c main.c)
 
 add_executable(sgbd ${SOURCES})
