@@ -4,8 +4,6 @@
 
 >*João Marcos*
 
->*Guilherme Lira*
-
 
 ## *_Funcionalidade_*
 
@@ -85,17 +83,13 @@ Você deve encontrar no log alguns vazamentos que ainda não foram consertados
 - [x] 1) Criar um tabela
 - [x] 2) Listar todas as tabelas
 - [x] 3) Criar uma nova linha na tabela
-- [ ] 4) Editar os valores de uma tabela
+- [x] 4) Editar os valores de uma tabela
 - [x] 5) Criar uma nova coluna na tabela
 - [x] 6) Listar todos os dados de uma tabela
 - [x] 7) Pesquisar valor em uma coluna
-- [ ] 8) Apagar valor de uma tabela
+- [x] 8) Apagar valor de uma tabela
 - [x] 9) Apagar uma tabela
-
-
-## *_Extras:_*
-- [x] Uso de repositório online para armazenamento
-- [x] Uso de repositório online para documentação do código
-- [ ] Uso de sistema de build automático (CMake ou Makefile)
-- [ ] Demonstração gráfica reponsiva da estrutura das tabelas
+- [x] Modularização e documentação do pasta include
+- [ ] Uso dd sistema de build automático Makefile
+- [ ] Função para demonstração gráfica reponsiva da estrutura das tabelas
 - [ ] Chave secundária relacional
