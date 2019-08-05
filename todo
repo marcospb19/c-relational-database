@@ -1,2 +1,0 @@
-Fix listOfTables.txt being track in git (need to be generated on setup, if doesn't exists)
-Make the user choose what char is the separator

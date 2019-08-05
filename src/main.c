@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "source/list.h"
-#include "source/tables.h"
-#include "source/messages.h"
-#include "source/command.h"
-#include "source/struct.h"
+#include "list.h"
+#include "tables.h"
+#include "messages.h"
+#include "command.h"
+#include "struct.h"
 
 
 int main()

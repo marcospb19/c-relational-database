@@ -1,19 +1,15 @@
-# Don't upload the binary executable
+# Final executable
 sgbd
 
-# Tables created
+# Compilation objects
+*.o
+
+# Tables created by usage except for listOfTables
 tables/*
-# Except for listOfTables
 !tables/listOfTables.txt
 
-# Any test
-test*
-
-# To do:
-# todo.txt
-
 # Cmake files
-cmake*
-CMake*
-!CMakeLists.txt
-!cmakeclean.sh 
+#
+
+# Valgrind log file
+valgrind/valgrindLog.txt
