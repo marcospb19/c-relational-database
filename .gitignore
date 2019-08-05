@@ -1,4 +1,4 @@
-# Don't upload the binary executable, the user needs to compile the program using make.sh or cmake
+# Don't upload the binary executable
 sgbd
 
 # Tables created
@@ -15,6 +15,5 @@ test*
 # Cmake files
 cmake*
 CMake*
-Makefile
 !CMakeLists.txt
 !cmakeclean.sh 
