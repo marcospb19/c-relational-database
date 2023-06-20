@@ -90,6 +90,6 @@ Você deve encontrar no log alguns vazamentos que ainda não foram consertados
 - [x] 8) Apagar valor de uma tabela
 - [x] 9) Apagar uma tabela
 - [x] Modularização e documentação do pasta include
-- [ ] Uso dd sistema de build automático Makefile
+- [x] Uso de sistema de build automático Makefile
 - [ ] Função para demonstração gráfica reponsiva da estrutura das tabelas
 - [ ] Chave secundária relacional
